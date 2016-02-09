@@ -282,6 +282,18 @@ void draw() {
     for (int i=0; i<back.length; i++) {
       image(back[i], backX+width*i, 0, width, height);
     }
+    //シリアル通信するときはコメントアウト解除
+    /*
+    //ブロックの情報取得
+    if (serial.available()>0 && !move) {
+     String str = serial.readStringUntil('e');
+     println(str);
+     block.getSerialData_(str);
+     serial.write('a');
+     } else {
+     println("not available");
+     }
+     */
     pushMatrix();
     translate(backX, 0);
     //ブロック描画
