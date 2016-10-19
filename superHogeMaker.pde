@@ -1,7 +1,7 @@
 import processing.serial.*;
 import ddf.minim.*;
 
-Serial serial;
+//Serial serial;
 Minim minim;
 AudioPlayer bgm;
 AudioSnippet jumpSound, fin, brokenSound, itemSound, bird, gameover, crush, button;
@@ -35,9 +35,11 @@ Block block2;  //対戦用のブロック配列
 
 void setup() {
   //↓シリアル使わないときはコメントアウト
+  /*
   println(Serial.list());
   serial=new Serial(this, Serial.list()[0], 9600);
   serial.write('a');
+  */
   //↑ここまで
 
   minim = new Minim( this );
@@ -327,6 +329,7 @@ void draw() {
     //シリアル使わないときはコメントアウト
     //シリアル使うときコメントアウト外すのを忘れずに！
     //↓ここから…
+    /*
     if (serial.available()>0 && !move) {
       String str = serial.readStringUntil('e');
       println(str);
@@ -335,6 +338,7 @@ void draw() {
     } else {
       println("not available");
     }
+    */
     //↑ここまでコメントアウト！
 
     pushMatrix();
@@ -377,6 +381,7 @@ void draw() {
     //シリアル使わないときはコメントアウト
     //シリアル使うときコメントアウト外すのを忘れずに！
     //↓ここから…
+    /*
     if (serial.available()>0 && !move) {
       String str = serial.readStringUntil('e');
       //println(str);
@@ -385,6 +390,7 @@ void draw() {
     } else {
       println("not available");
     }
+    */
     //↑ここまでコメントアウト！
 
     for (int[] b : broken) {
