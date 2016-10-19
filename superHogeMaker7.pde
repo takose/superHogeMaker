@@ -465,27 +465,59 @@ void draw() {
       player.jump();
     }
     player.draw();
+    
+    
+    //アイテム
+    for (Item i : items) {
+      if (i.isItem(player.posX+8*n, player.posY+8*n)) {
+        //キャラとぶつかったら使用されて消滅
+        //つぶやく
+        tweet.add(new int[] {
+          (int)random(-16, 48), (int)random(4, 24)
+        }
+        );
+        bird.rewind();
+        bird.play();
+        items.remove(i);
+        break;
+      }
+    }
+    /*
+      displayとremoveを同じfor文にいれると、
+     removeされたときbreakしなければならないため、
+     removeされたものより後ろのリストのアイテムが
+     一瞬描画されなくなる。なのでfor文を分ける。
+     */
+    for (Item i : items) {
+      i.display();
+    }
+    
+    //つぶやき
+    for (int[] t : tweet) {
+      image(FMS, player.posX-t[0]*n, player.posY-t[1]*n, 80*(n-1), 16*(n-1));
+    }
 
 
     //敵
 
     //一定時間たったら敵を出現
-    if (frameCount % 240 == 0) {
+    if (frameCount % 100 == 0 && player.alive) {
       //進行方向
       int eneX = (int)random(2);
       if (eneX==0) {
         eneX=-4*n;
       } else {
-        eneX=width+4*2;
+        eneX=width+4*n;
       } 
 
-      //空からor地上から
-      int eneY=(int)random(5);
+      //出現場所（高さ）
+      int eneY=(int)random(-5,5);
+      println("pos="+eneY);
 
       //空から
-      if (eneY==0) {
-        eneY=height-48*n;
-        enemy.add(new Enemy((int)random(0, width-16*3), eneY));
+      if (eneY<=0) {
+        eneY=-16*n;
+        enemy.add(new Enemy((int)random(16*n*6, width-16*n*5), eneY));
       } else if (eneY>=1 && eneY<=3) {
         //途中のブロックの上
         eneY=(2*eneY-2+3)*16*n-4;
@@ -504,21 +536,22 @@ void draw() {
       }
       eneNumber++;
       
-      println(eneX+", "+eneY+", "+enemy.get(enemy.size()-1).isFacingRight);
-      ellipse(eneX, eneY, 50, 50);
+      //println(eneX+", "+eneY+", "+enemy.get(enemy.size()-1).isFacingRight);
     }
     //i*16*n, (j+3)*16*n
 
     for (Enemy e : enemy) {
+      
+      //キャラとの当たり判定
       if (dist(e.posX, e.posY, player.posX, player.posY)<=12*n && e.alive) {
-        if (player.posY<e.posY) {
+        if (player.posY<e.posY && player.alive) {
           //キャラのほうが上にいるなら敵消滅
           e.alive=false;
           e.time=0;
           crush.rewind();
           crush.play();
         } else {
-          //ゲームオーバー
+          //キャラ死亡でゲームオーバー
           gameover.rewind();
           gameover.play();
           player.alive=false;
@@ -530,10 +563,11 @@ void draw() {
         }
       }
       if (!e.alive && e.time>4) {
+        //敵死亡からしばらくしたら消える
         enemy.remove(e);
         break;
       }
-      if (e.posX+16*n<0 || e.posX>width) {
+      if (e.posX<-16*n-4 || e.posX>width+16*n+4) {
         //ステージ外に行ったら消える
         enemy.remove(e);
         break;
@@ -546,15 +580,18 @@ void draw() {
      一瞬描画されなくなる。なのでfor文を分ける。
      */
     for (Enemy e : enemy) {
-      int eneFloor=block2.isFloor(e.posX+12*n, e.posY);
+      int eneFloor;
+      if(e.isFacingRight){
+        eneFloor=block2.isFloor(e.posX+4*n, e.posY);
+      }else{
+        eneFloor=block2.isFloor(e.posX+12*n, e.posY);
+      }
       e.move(eneFloor);
       if (e.touch && e.alive) {
         if (e.isFacingRight) {
           e.moveRight();
-          println("right");
         } else {
           e.moveLeft();
-          println("left");
         }
       }
       e.draw();
@@ -712,19 +749,21 @@ void stop() {
 
 void setBrick() {
   //対戦スタート時のブロック初期配置
-
+  
+  block2.brick[1][1] = 1;
   for (int i=0; i<3; i++) {
     block2.brick[i][3] = 1;
   }
-  for (int i=0; i<5; i++) {
+  for (int i=0; i<4; i++) {
     block2.brick[i][5] = 1;
   }
 
   block2.brick[19][1] = 1;
+  block2.brick[18][1] = 1;
   for (int i=0; i<3; i++) {
     block2.brick[19-i][3] = 1;
   }
-  for (int i=0; i<5; i++) {
+  for (int i=0; i<4; i++) {
     block2.brick[19-i][5] = 1;
   }
 
