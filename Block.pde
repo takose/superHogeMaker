@@ -3,6 +3,11 @@ class Block {
   int [][] brick;
   int n;  //拡大倍率
   int area;
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> cd76ee5d3347145ed4038a6ddc0f9951ce81ae22
   Block(int m, int num) {
     //mは背景を何枚分使うかの枚数。ステージの長さ
     //numは拡大倍率
@@ -18,6 +23,12 @@ class Block {
 
 
   int isFloor(int _x, int _y) {
+<<<<<<< HEAD
+=======
+    /*int []chara=squares(_x,_y);
+     int x=chara[0];
+     int y=chara[1];*/
+>>>>>>> cd76ee5d3347145ed4038a6ddc0f9951ce81ae22
     int x=_x/(16*n);
     int y;
     if (x>=brick.length) {
@@ -109,12 +120,19 @@ class Block {
 
   void getSerialData_(String inString) {
     //文字列データをbrickに入れる
+<<<<<<< HEAD
+=======
+    //println("inString="+inString);
+>>>>>>> cd76ee5d3347145ed4038a6ddc0f9951ce81ae22
     String lines[] = split(inString, '/'); 
     try {
       for (int j=0; j<lines.length; j++) {
         lines[j]=trim(lines[j]);
         int data[] = int(split(lines[j], ',') );
+<<<<<<< HEAD
         //println(data[0]+", "+data[1]);
+=======
+>>>>>>> cd76ee5d3347145ed4038a6ddc0f9951ce81ae22
         for (int i=0; i<data.length; i++) {
           if (brick[j+10*area][i]<=0 || data[i]<=0) {
             brick[j+10*area][i] = data[i];
@@ -126,6 +144,29 @@ class Block {
       println(e);
     }
   }
+<<<<<<< HEAD
+=======
+  
+  void getSerialData_battle(String inString) {
+    //文字列データをbrickに入れる
+    //println("inString="+inString);
+    String lines[] = split(inString, '/'); 
+    try {
+      for (int j=0; j<lines.length; j++) {
+        lines[j]=trim(lines[j]);
+        int data[] = int(split(lines[j], ',') );
+        for (int i=0; i<data.length; i++) {
+          if (brick[int(j+10*0.5)][i]<=0 || data[i]<=0) {
+            brick[int(j+10*0.5)][i] = data[i];
+          }
+        }
+      }
+    }
+    catch(Exception e) {
+      println(e);
+    }
+  }
+>>>>>>> cd76ee5d3347145ed4038a6ddc0f9951ce81ae22
 
   void saveToFile() {
     //ファイルにセーブ

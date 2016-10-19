@@ -36,6 +36,10 @@ class Player {
     }
     walkL[4]=walkL[2];
     walkL[5]=walkL[1];
+<<<<<<< HEAD
+=======
+
+>>>>>>> cd76ee5d3347145ed4038a6ddc0f9951ce81ae22
     jumpR[0]=loadImage("jumpR1.png");
     jumpR[1]=loadImage("jumpR2.png");
 
@@ -45,6 +49,10 @@ class Player {
     dead=loadImage("dead.png");
   }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> cd76ee5d3347145ed4038a6ddc0f9951ce81ae22
   void move(int floor) {
     //落下時
     if (posY<floor) {
@@ -54,6 +62,13 @@ class Player {
         touch=false;
       }
       down();
+<<<<<<< HEAD
+=======
+      //着地判定 着地してから次のジャンプができるように
+      //この条件分岐はjumpをfalseにしてしまうので，
+      //着地直後に一回だけ呼び出したい
+      //よってこの次のelseじゃなくてここに書く
+>>>>>>> cd76ee5d3347145ed4038a6ddc0f9951ce81ae22
       if (posY>floor) {
         posY=floor;
         time=0;
