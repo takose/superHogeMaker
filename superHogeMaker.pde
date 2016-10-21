@@ -658,6 +658,9 @@ void keyReleased() {
       player.left=false;
     }
   }
+  if(key == 'b'){
+    initialize();
+  }
 }
 
 //-----------------------------
