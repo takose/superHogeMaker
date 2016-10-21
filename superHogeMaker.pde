@@ -35,9 +35,11 @@ Block block2;  //対戦用のブロック配列
 
 void setup() {
   //↓シリアル使わないときはコメントアウト
-  println(Serial.list());
-  serial=new Serial(this, Serial.list()[0], 9600);
-  serial.write('a');
+  if (Serial.list().length>0) {
+    println("serial="+Serial.list());
+    serial=new Serial(this, Serial.list()[0], 9600);
+    serial.write('a');
+  }
   //↑ここまで
 
   minim = new Minim( this );
@@ -465,8 +467,8 @@ void draw() {
       player.jump();
     }
     player.draw();
-    
-    
+
+
     //アイテム
     for (Item i : items) {
       if (i.isItem(player.posX+8*n, player.posY+8*n)) {
@@ -491,7 +493,7 @@ void draw() {
     for (Item i : items) {
       i.display();
     }
-    
+
     //つぶやき
     for (int[] t : tweet) {
       image(FMS, player.posX-t[0]*n, player.posY-t[1]*n, 80*(n-1), 16*(n-1));
@@ -511,7 +513,7 @@ void draw() {
       } 
 
       //出現場所（高さ）
-      int eneY=(int)random(-5,5);
+      int eneY=(int)random(-5, 5);
       println("pos="+eneY);
 
       //空から
@@ -527,7 +529,7 @@ void draw() {
         eneY=height-16*3*n-4;
         enemy.add(new Enemy(eneX, eneY));
       }
-      
+
       //進行方向設定
       if (eneX<=0) {
         enemy.get(enemy.size()-1).isFacingRight = true;
@@ -535,13 +537,13 @@ void draw() {
         enemy.get(enemy.size()-1).isFacingRight = false;
       }
       eneNumber++;
-      
+
       //println(eneX+", "+eneY+", "+enemy.get(enemy.size()-1).isFacingRight);
     }
     //i*16*n, (j+3)*16*n
 
     for (Enemy e : enemy) {
-      
+
       //キャラとの当たり判定
       if (dist(e.posX, e.posY, player.posX, player.posY)<=12*n && e.alive) {
         if (player.posY<e.posY && player.alive) {
@@ -581,9 +583,9 @@ void draw() {
      */
     for (Enemy e : enemy) {
       int eneFloor;
-      if(e.isFacingRight){
+      if (e.isFacingRight) {
         eneFloor=block2.isFloor(e.posX+4*n, e.posY);
-      }else{
+      } else {
         eneFloor=block2.isFloor(e.posX+12*n, e.posY);
       }
       e.move(eneFloor);
@@ -658,7 +660,7 @@ void keyReleased() {
       player.left=false;
     }
   }
-  if(key == 'b'){
+  if (key == 'b') {
     initialize();
   }
 }
@@ -752,7 +754,7 @@ void stop() {
 
 void setBrick() {
   //対戦スタート時のブロック初期配置
-  
+
   block2.brick[1][1] = 1;
   for (int i=0; i<3; i++) {
     block2.brick[i][3] = 1;
