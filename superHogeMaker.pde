@@ -4,7 +4,7 @@ import ddf.minim.*;
 Serial serial;
 Minim minim;
 AudioPlayer bgm;
-AudioSnippet jumpSound, fin, brokenSound, itemSound, bird, gameover, crush, button;
+AudioPlayer jumpSound, fin, brokenSound, itemSound, bird, gameover, crush, button;
 
 //モード共通で使う変数
 int n=3;  //拡大倍率
@@ -44,16 +44,16 @@ void setup() {
 
   minim = new Minim( this );
   bgm = minim.loadFile( "BGM.mp3" );
-  jumpSound = minim.loadSnippet("jump01.mp3");
-  fin = minim.loadSnippet("fin.mp3");
-  brokenSound = minim.loadSnippet("broken.mp3");
-  itemSound = minim.loadSnippet("nyu2.mp3");
-  bird = minim.loadSnippet("bird.mp3");
-  gameover = minim.loadSnippet("gameover.mp3");
-  crush = minim.loadSnippet("crushed.mp3");
-  button = minim.loadSnippet("decision3.mp3");
+  jumpSound = minim.loadFile("jump01.mp3");
+  fin = minim.loadFile("fin.mp3");
+  brokenSound = minim.loadFile("broken.mp3");
+  itemSound = minim.loadFile("nyu2.mp3");
+  bird = minim.loadFile("bird.mp3");
+  gameover = minim.loadFile("gameover.mp3");
+  crush = minim.loadFile("crushed.mp3");
+  button = minim.loadFile("decision3.mp3");
 
-  size(320*n, 192*n);
+  size(960, 576);
   noSmooth();  //ぼかさない処理
 
   title=loadImage("titlelogo2.png");
@@ -777,4 +777,3 @@ void setBrick() {
   block2.brick[1][5] = 2;
   block2.brick[17][5] = 2;
 }
-
