@@ -18,8 +18,3 @@ class Enemy extends Player {
     }
   }
 }
-
-
-
-
-
