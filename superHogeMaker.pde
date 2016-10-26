@@ -38,13 +38,12 @@ void settings() {
 }
 
 void setup() {
-  //↓シリアル使わないときはコメントアウト
+  //シリアル
   if (Serial.list().length>0) {
     println("serial="+Serial.list());
     serial=new Serial(this, Serial.list()[0], 9600);
     serial.write('a');
   }
-  //↑ここまで
 
   minim = new Minim( this );
   bgm = minim.loadFile( "BGM.mp3" );
@@ -327,9 +326,6 @@ void draw() {
     }
 
     //ブロックの情報取得
-    //シリアル使わないときはコメントアウト
-    //シリアル使うときコメントアウト外すのを忘れずに！
-    //↓ここから…
     if (Serial.list().length>0) {
       if (serial.available()>0 && !move) {
         String str = serial.readStringUntil('e');
@@ -340,7 +336,6 @@ void draw() {
         println("not available");
       }
     }
-    //↑ここまでコメントアウト！
 
     pushMatrix();
     translate(backX, 0);
@@ -379,9 +374,6 @@ void draw() {
     //ブロック
 
     //ブロックの情報取得
-    //シリアル使わないときはコメントアウト
-    //シリアル使うときコメントアウト外すのを忘れずに！
-    //↓ここから…
     if (Serial.list().length>0) {
       if (serial.available()>0 && !move) {
         String str = serial.readStringUntil('e');
@@ -392,7 +384,6 @@ void draw() {
         println("not available");
       }
     }
-    //↑ここまでコメントアウト！
 
     for (int[] b : broken) {
       /*
