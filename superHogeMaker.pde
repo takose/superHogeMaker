@@ -32,6 +32,10 @@ boolean move;  //画面表示の移動フラグ
 //対戦モード用変数
 Block block2;  //対戦用のブロック配列
 
+void settings() {
+  size(320*n, 192*n);
+  noSmooth();  //ぼかさない処理
+}
 
 void setup() {
   //↓シリアル使わないときはコメントアウト
@@ -52,9 +56,6 @@ void setup() {
   gameover = minim.loadFile("gameover.mp3");
   crush = minim.loadFile("crushed.mp3");
   button = minim.loadFile("decision3.mp3");
-
-  size(960, 576);
-  noSmooth();  //ぼかさない処理
 
   title=loadImage("titlelogo2.png");
   start=loadImage("startButton.png");
@@ -205,8 +206,8 @@ void draw() {
         block.brick[chara[0]][chara[1]]=4;
         broken.add(new int[] {
           chara[0], chara[1], 0
-        }
-        );
+          }
+          );
       }
     }
 
@@ -224,8 +225,8 @@ void draw() {
         //つぶやく
         tweet.add(new int[] {
           (int)random(-16, 48), (int)random(4, 24)
-        }
-        );
+          }
+          );
         bird.rewind();
         bird.play();
         items.remove(i);
@@ -457,8 +458,8 @@ void draw() {
         block2.brick[chara[0]][chara[1]]=4;
         broken.add(new int[] {
           chara[0], chara[1], 0
-        }
-        );
+          }
+          );
       }
     }
 
@@ -476,8 +477,8 @@ void draw() {
         //つぶやく
         tweet.add(new int[] {
           (int)random(-16, 48), (int)random(4, 24)
-        }
-        );
+          }
+          );
         bird.rewind();
         bird.play();
         items.remove(i);
