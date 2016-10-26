@@ -330,13 +330,15 @@ void draw() {
     //シリアル使わないときはコメントアウト
     //シリアル使うときコメントアウト外すのを忘れずに！
     //↓ここから…
-    if (serial.available()>0 && !move) {
-      String str = serial.readStringUntil('e');
-      println(str);
-      block.getSerialData_(str);
-      serial.write('a');
-    } else {
-      println("not available");
+    if (Serial.list().length>0) {
+      if (serial.available()>0 && !move) {
+        String str = serial.readStringUntil('e');
+        println(str);
+        block.getSerialData_(str);
+        serial.write('a');
+      } else {
+        println("not available");
+      }
     }
     //↑ここまでコメントアウト！
 
@@ -380,13 +382,15 @@ void draw() {
     //シリアル使わないときはコメントアウト
     //シリアル使うときコメントアウト外すのを忘れずに！
     //↓ここから…
-    if (serial.available()>0 && !move) {
-      String str = serial.readStringUntil('e');
-      //println(str);
-      block2.getSerialData_battle(str);
-      serial.write('a');
-    } else {
-      println("not available");
+    if (Serial.list().length>0) {
+      if (serial.available()>0 && !move) {
+        String str = serial.readStringUntil('e');
+        //println(str);
+        block2.getSerialData_battle(str);
+        serial.write('a');
+      } else {
+        println("not available");
+      }
     }
     //↑ここまでコメントアウト！
 
@@ -662,6 +666,7 @@ void keyReleased() {
     }
   }
   if (key == 'b') {
+    stop();
     initialize();
   }
 }
