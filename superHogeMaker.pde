@@ -12,7 +12,7 @@ int m=3;  //背景の枚数。ステージの長さ
 int page;  //どの画面にいるか
 int backX;  //背景X座標
 PImage [] back=new PImage[m];  //背景
-PImage title, start, play, make, returnButton;  //タイトルと各種ボタン
+PImage title, start, play, make, battle, returnButton;  //タイトルと各種ボタン
 Block block;
 
 //あそぶモード用変数
@@ -58,14 +58,15 @@ void setup() {
 
   title=loadImage("titlelogo2.png");
   start=loadImage("startButton.png");
-  play=loadImage("playButton.png");
-  make=loadImage("makeButton.png");
+  play=loadImage("playButtonBig.png");
+  make=loadImage("makeButtonBig.png");
+  battle=loadImage("battle1.png");
   returnButton=loadImage("returnButton.png");
-  back[0]=loadImage("GameBackground.png");
+  back[0]=loadImage("GameBackground4.png");
   for (int i=0; i<back.length; i++) {
     back[i]=back[0];
   }
-  goal=loadImage("flag.png");
+  goal=loadImage("flag2.png");
   FMS=loadImage("tweet_big.png");
 
   block = new Block(m, n);
@@ -95,9 +96,10 @@ void draw() {
   case 1:
     //モード選択画面
     image(back[0], 0, 0, width, height);
-    image(play, 16*4*n, 16*5*n, 48*n, 16*n);
-    image(make, 16*13*n, 16*5*n, 48*n, 16*n);
-    image(returnButton, 16*17*n, 16*9*n, 48*n, 16*n);
+    image(play, 16*2*n, 16*5*n, 48*n, 32*n);
+    image(battle, 16*7*n, 16*5*n, 16*6*n, 32*n);
+    image(make, 16*15*n, 16*5*n, 48*n, 32*n);
+    image(returnButton, 0, 0, 48*n, 16*n);
     break;
 
   case 2:
@@ -675,20 +677,24 @@ void mousePressed() {
     break;
 
   case 1:
-    if (mouseY>=16*5*n && mouseY<=16*6*n) {
-      if (mouseX>=16*4*n && mouseX<=16*7*n) {
+    if (mouseY>=16*5*n && mouseY<=16*7*n) {
+      if (mouseX>=16*2*n && mouseX<=16*5*n) {
         button.rewind();
         button.play();
         page=2;
-      } else if (mouseX>=16*13*n && mouseX<=16*16*n) {
+      } else if (mouseX>=16*15*n && mouseX<=18*16*n) {
         button.rewind();
         button.play();
         page=3;
+      } else if (mouseX>=16*7*n && mouseX<=16*13*n) {
+        button.rewind();
+        button.play();
+        page=4;
       }
-    } else if (mouseY>=16*9*n && mouseY<=16*10*n && mouseX>=16*17*n) {
+    } else if (mouseY<=16*n && mouseX<=48*n) {
       button.rewind();
       button.play();
-      page=4;
+      page=0;
     }
 
     break;
