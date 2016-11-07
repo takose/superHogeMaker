@@ -5,7 +5,7 @@ class Player {
   PImage [] jumpR=new PImage[2];  //ジャンプ右向き
   PImage [] jumpL=new PImage[2];  //ジャンプ左向き
   PImage dead;  //死に顔
-  int n=3;  //拡大倍率
+  int n = displayHeight / (16 * 12);;  //拡大倍率
   int beforeFloor;
   boolean touch;  //床についてるか(jump中はtrue)
   boolean isFacingRight;  //どっち向いてるか(右でtrue)
