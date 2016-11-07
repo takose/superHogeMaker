@@ -7,7 +7,7 @@ AudioPlayer bgm;
 AudioPlayer jumpSound, fin, brokenSound, itemSound, bird, gameover, crush, button;
 
 //モード共通で使う変数
-int n=4;  //拡大倍率
+int n;  //拡大倍率
 int m=3;  //背景の枚数。ステージの長さ
 int page;  //どの画面にいるか
 int backX;  //背景X座標
