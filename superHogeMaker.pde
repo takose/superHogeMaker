@@ -7,7 +7,7 @@ AudioPlayer bgm;
 AudioPlayer jumpSound, fin, brokenSound, itemSound, bird, gameover, crush, button;
 
 //モード共通で使う変数
-int n=3;  //拡大倍率
+int n;  //拡大倍率
 int m=3;  //背景の枚数。ステージの長さ
 int page;  //どの画面にいるか
 int backX;  //背景X座標
@@ -33,6 +33,7 @@ boolean move;  //画面表示の移動フラグ
 Block block2;  //対戦用のブロック配列
 
 void settings() {
+  n = displayHeight / (16 * 12);
   size(320*n, 192*n);
   noSmooth();  //ぼかさない処理
 }
@@ -207,8 +208,8 @@ void draw() {
         block.brick[chara[0]][chara[1]]=4;
         broken.add(new int[] {
           chara[0], chara[1], 0
-          }
-          );
+        }
+        );
       }
     }
 
@@ -226,8 +227,8 @@ void draw() {
         //つぶやく
         tweet.add(new int[] {
           (int)random(-16, 48), (int)random(4, 24)
-          }
-          );
+        }
+        );
         bird.rewind();
         bird.play();
         items.remove(i);
@@ -455,8 +456,8 @@ void draw() {
         block2.brick[chara[0]][chara[1]]=4;
         broken.add(new int[] {
           chara[0], chara[1], 0
-          }
-          );
+        }
+        );
       }
     }
 
@@ -474,8 +475,8 @@ void draw() {
         //つぶやく
         tweet.add(new int[] {
           (int)random(-16, 48), (int)random(4, 24)
-          }
-          );
+        }
+        );
         bird.rewind();
         bird.play();
         items.remove(i);
