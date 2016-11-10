@@ -1,3 +1,10 @@
+import ddf.minim.spi.*;
+import ddf.minim.signals.*;
+import ddf.minim.*;
+import ddf.minim.analysis.*;
+import ddf.minim.ugens.*;
+import ddf.minim.effects.*;
+
 import processing.serial.*;
 import ddf.minim.*;
 
@@ -199,7 +206,8 @@ void draw() {
         //アイテムブロックに頭突きしたらアイテム出現
         itemSound.rewind();
         itemSound.play();
-        items.add(new Item(chara[0], chara[1], n) );
+        int kind = int(random(2));
+        items.add(new Item(chara[0], chara[1], n, kind) );
         block.brick[chara[0]][chara[1]]=3;
       } else if (block.brick[chara[0]][chara[1]]==1) {
         //普通のブロックに頭突きしたらブロック破壊
@@ -224,13 +232,9 @@ void draw() {
     for (Item i : items) {
       if (i.isItem(player.posX+8*n, player.posY+8*n)) {
         //キャラとぶつかったら使用されて消滅
-        //つぶやく
-        tweet.add(new int[] {
-          (int)random(-16, 48), (int)random(4, 24)
-        }
-        );
-        bird.rewind();
-        bird.play();
+        
+        //bird.rewind();
+        //bird.play();
         items.remove(i);
         break;
       }
@@ -447,7 +451,7 @@ void draw() {
         //アイテムブロックに頭突きしたらアイテム出現
         itemSound.rewind();
         itemSound.play();
-        items.add(new Item(chara[0], chara[1], n) );
+        items.add(new Item(chara[0], chara[1], n, int(random(2))) );
         block2.brick[chara[0]][chara[1]]=3;
       } else if (block2.brick[chara[0]][chara[1]]==1) {
         //普通のブロックに頭突きしたらブロック破壊
@@ -473,13 +477,11 @@ void draw() {
       if (i.isItem(player.posX+8*n, player.posY+8*n)) {
         //キャラとぶつかったら使用されて消滅
         //つぶやく
-        tweet.add(new int[] {
-          (int)random(-16, 48), (int)random(4, 24)
-        }
-        );
-        bird.rewind();
-        bird.play();
+        
+        //bird.rewind();
+        //bird.play();
         items.remove(i);
+        
         break;
       }
     }

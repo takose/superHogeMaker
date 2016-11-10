@@ -1,17 +1,28 @@
 class Item {
   int posX, posY;
-  PImage bird;
-  int n;
+  PImage img;
+  int n,kind;
 
-  Item(int x, int y, int num) {
+  Item(int x, int y, int num, int _kind) {
     n=num;
     posX=x*16*n;
     posY=y*16*n+32*n;
-    bird=loadImage("yellowbird.png");
+    kind = _kind;
+    switch(kind){
+      case 0:
+        img=loadImage("stone.png");
+      break;
+      case 1:
+        img=loadImage("amethyst.png");
+      break;
+      default:
+      break;
+    }
+    kind = _kind;
   }
 
   void display() {
-    image(bird, posX, posY, 16*n, 16*n);
+    image(img, posX, posY, 16*n, 16*n);
   }
 
   boolean isItem(int _x, int _y) {
