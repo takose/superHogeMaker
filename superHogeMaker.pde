@@ -31,6 +31,7 @@ boolean move;  //画面表示の移動フラグ
 
 //対戦モード用変数
 Block block2;  //対戦用のブロック配列
+int boardPoint, playerPoint;
 
 void settings() {
   size(320*n, 192*n);
@@ -372,6 +373,10 @@ void draw() {
     //背景描画
     image(back[0], 0, 0, width, height);
 
+    //点数初期化
+    boardPoint = 0;
+    playerPoint = 0;
+
 
     //ブロック
 
@@ -597,6 +602,16 @@ void draw() {
       e.draw();
     }
 
+    //ポイント
+    for (int i=5; i<15; i++) {
+      for (int j=0; j<6; j++) {
+        if (block2.brick[i][j]>0) {
+          boardPoint++;
+        }
+      }
+    }
+    println("boardPoint="+boardPoint);
+
 
     /*
     ゲームオーバーから3秒くらいしたら
@@ -757,6 +772,12 @@ void stop() {
 
 void setBrick() {
   //対戦スタート時のブロック初期配置
+
+  for (int i=0; i<20; i++) {
+    for (int j=0; j<6; j++) {
+      block2.brick[i][j] = 0;
+    }
+  }
 
   block2.brick[1][1] = 1;
   for (int i=0; i<3; i++) {

@@ -138,7 +138,7 @@ class Block {
   }
 
 
-  
+
   void getSerialData_battle(String inString) {
     //文字列データをbrickに入れる
     //println("inString="+inString);
@@ -150,6 +150,10 @@ class Block {
         for (int i=0; i<data.length; i++) {
           if (brick[int(j+10*0.5)][i]<=0 || data[i]<=0) {
             brick[int(j+10*0.5)][i] = data[i];
+            int k = (int)random(3);
+            if (k==0 && data[i]==1) {
+              brick[int(j+10*0.5)][i] = 2;
+            }
           }
         }
       }
