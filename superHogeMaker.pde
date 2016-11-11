@@ -781,26 +781,35 @@ void setBrick() {
       block2.brick[i][j] = 0;
     }
   }
-
-  block2.brick[1][1] = 1;
+  
+  ArrayList<int[]> initPos = new ArrayList<int[]>();
+  initPos.add(new int[]{0,1});
+  initPos.add(new int[]{1,1});
+  
   for (int i=0; i<3; i++) {
-    block2.brick[i][3] = 1;
+    initPos.add(new int[]{i,3});
   }
   for (int i=0; i<4; i++) {
-    block2.brick[i][5] = 1;
+    initPos.add(new int[]{i,5});
   }
 
-  block2.brick[19][1] = 1;
-  block2.brick[18][1] = 1;
+  initPos.add(new int[]{19,1});
+  initPos.add(new int[]{18,1});
   for (int i=0; i<3; i++) {
-    block2.brick[19-i][3] = 1;
+    initPos.add(new int[]{19-i,3});
   }
   for (int i=0; i<4; i++) {
-    block2.brick[19-i][5] = 1;
+    initPos.add(new int[]{19-i,5});
+  }
+  
+  for (int[] b: initPos){
+    block2.brick[b[0]][b[1]] = 1;
+  }
+  for(int i=0; i<5; i++){
+    int k = (int)random(initPos.size());
+    int[] b = initPos.get(k);
+    block2.brick[b[0]][b[1]] = 2;
+    initPos.remove(k);
   }
 
-  block2.brick[0][1] = 2;
-  block2.brick[18][3] = 2;
-  block2.brick[1][5] = 2;
-  block2.brick[17][5] = 2;
 }
