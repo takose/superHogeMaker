@@ -38,7 +38,8 @@ boolean move;  //画面表示の移動フラグ
 
 //対戦モード用変数
 Block block2;  //対戦用のブロック配列
-int boardPoint, playerPoint;
+int boardPoint, playerPoint;  //それぞれのポイント
+PImage [] numbers = new PImage[10];  //数字
 
 void settings() {
   n = displayHeight / (16 * 12);
@@ -77,6 +78,10 @@ void setup() {
   }
   goal=loadImage("flag2.png");
   FMS=loadImage("tweet_big.png");
+  PImage num = loadImage("numbers_line.png");
+  for(int i=0; i<10; i++){
+    numbers[i] = num.get(8*i, 0, 8, 16);
+  }
 
   block = new Block(m, n);
   player=new Player(100, 10);
@@ -252,7 +257,7 @@ void draw() {
 
     //敵
     for (Enemy e : enemy) {
-      if (dist(e.posX, e.posY, player.posX, player.posY)<=12*n && e.alive) {
+      if (dist(e.posX, e.posY, player.posX, player.posY)<=12*n && e.alive && player.alive) {
         if (player.posY<e.posY) {
           //キャラのほうが上にいるなら敵消滅
           e.alive=false;
@@ -378,11 +383,6 @@ void draw() {
     //背景描画
     image(back[0], 0, 0, width, height);
 
-    //点数初期化
-    boardPoint = 0;
-    playerPoint = 0;
-
-
     //ブロック
 
     //ブロックの情報取得
@@ -486,6 +486,7 @@ void draw() {
         //bird.rewind();
         //bird.play();
         items.remove(i);
+        playerPoint++;
         
         break;
       }
@@ -551,13 +552,14 @@ void draw() {
     for (Enemy e : enemy) {
 
       //キャラとの当たり判定
-      if (dist(e.posX, e.posY, player.posX, player.posY)<=12*n && e.alive) {
+      if (dist(e.posX, e.posY, player.posX, player.posY)<=12*n && e.alive && player.alive) {
         if (player.posY<e.posY && player.alive) {
           //キャラのほうが上にいるなら敵消滅
           e.alive=false;
           e.time=0;
           crush.rewind();
           crush.play();
+          playerPoint++;
         } else {
           //キャラ死亡でゲームオーバー
           gameover.rewind();
@@ -606,6 +608,9 @@ void draw() {
     }
 
     //ポイント
+    
+    //ボード側点数カウント
+    boardPoint = 0;
     for (int i=5; i<15; i++) {
       for (int j=0; j<6; j++) {
         if (block2.brick[i][j]>0) {
@@ -614,6 +619,10 @@ void draw() {
       }
     }
     println("boardPoint="+boardPoint);
+    println("playerPoint="+playerPoint);
+    
+    drawPoints(16*n,11*16*n,playerPoint);
+    drawPoints(18*16*n,11*16*n,boardPoint);
 
 
     /*
@@ -761,6 +770,7 @@ void initialize() {
   player.finish=false;
   bgmFlg=false;
   block.area=0;
+  playerPoint = 0;
   block2.area = 0;
   setBrick();  //初期配置
 }
@@ -812,4 +822,17 @@ void setBrick() {
     initPos.remove(k);
   }
 
+}
+
+void drawPoints(int x, int y, int point){
+  int p = 0;
+  PImage img = new PImage();
+  for (int i=2; i>=0; i--){
+    p = point%10;
+    point = point/10;
+    print(p+" ");
+    img = numbers[p];
+    image(img, x+(i*8*n), y, 8*n, 16*n);
+  }
+  println();
 }
