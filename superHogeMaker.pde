@@ -6,7 +6,6 @@ import ddf.minim.ugens.*;
 import ddf.minim.effects.*;
 
 import processing.serial.*;
-import ddf.minim.*;
 
 Serial serial;
 Minim minim;
@@ -40,6 +39,8 @@ boolean move;  //画面表示の移動フラグ
 Block block2;  //対戦用のブロック配列
 int boardPoint, playerPoint;  //それぞれのポイント
 PImage [] numbers = new PImage[10];  //数字
+PImage clock, pointP, pointB;
+int startTime, remainTime;
 
 void settings() {
   n = displayHeight / (16 * 12);
@@ -79,9 +80,12 @@ void setup() {
   goal=loadImage("flag2.png");
   FMS=loadImage("tweet_big.png");
   PImage num = loadImage("numbers_line.png");
-  for(int i=0; i<10; i++){
+  for (int i=0; i<10; i++) {
     numbers[i] = num.get(8*i, 0, 8, 16);
   }
+  clock = loadImage("clock2.png");
+  pointP = loadImage("pointP.png");
+  pointB = loadImage("pointB.png");
 
   block = new Block(m, n);
   player=new Player(100, 10);
@@ -222,8 +226,8 @@ void draw() {
         block.brick[chara[0]][chara[1]]=4;
         broken.add(new int[] {
           chara[0], chara[1], 0
-        }
-        );
+          }
+          );
       }
     }
 
@@ -238,7 +242,7 @@ void draw() {
     for (Item i : items) {
       if (i.isItem(player.posX+8*n, player.posY+8*n)) {
         //キャラとぶつかったら使用されて消滅
-        
+
         //bird.rewind();
         //bird.play();
         items.remove(i);
@@ -465,8 +469,8 @@ void draw() {
         block2.brick[chara[0]][chara[1]]=4;
         broken.add(new int[] {
           chara[0], chara[1], 0
-        }
-        );
+          }
+          );
       }
     }
 
@@ -482,12 +486,12 @@ void draw() {
       if (i.isItem(player.posX+8*n, player.posY+8*n)) {
         //キャラとぶつかったら使用されて消滅
         //つぶやく
-        
+
         //bird.rewind();
         //bird.play();
         items.remove(i);
         playerPoint++;
-        
+
         break;
       }
     }
@@ -608,7 +612,7 @@ void draw() {
     }
 
     //ポイント
-    
+
     //ボード側点数カウント
     boardPoint = 0;
     for (int i=5; i<15; i++) {
@@ -618,12 +622,26 @@ void draw() {
         }
       }
     }
-    println("boardPoint="+boardPoint);
-    println("playerPoint="+playerPoint);
-    
-    drawPoints(16*n,11*16*n,playerPoint);
-    drawPoints(18*16*n,11*16*n,boardPoint);
 
+    if (playerPoint<0) {
+      playerPoint = 0;
+    }
+    if (boardPoint<0) {
+      boardPoint = 0;
+    }
+
+    image(pointP, 16*n, 11*16*n, 16*n, 16*n);
+    drawPoints(2*16*n, 11*16*n, playerPoint, 4);
+    image(pointB, 16*16*n, 11*16*n, 16*n, 16*n);
+    drawPoints(17*16*n, 11*16*n, boardPoint, 4);
+
+    //残り時間
+    remainTime = 30-(millis()/1000-startTime);
+    if (remainTime<0) {
+      remainTime = 0;
+    }
+    drawPoints(18*16*n, 0, remainTime, 2);
+    image(clock, 17*16*n, 0, 16*n, 16*n);
 
     /*
     ゲームオーバーから3秒くらいしたら
@@ -716,6 +734,7 @@ void mousePressed() {
       } else if (mouseX>=16*7*n && mouseX<=16*13*n) {
         button.rewind();
         button.play();
+        startTime = millis()/1000;
         page=4;
       }
     } else if (mouseY<=16*n && mouseX<=48*n) {
@@ -773,6 +792,8 @@ void initialize() {
   playerPoint = 0;
   block2.area = 0;
   setBrick();  //初期配置
+  startTime = 0;
+  remainTime = 30;
 }
 
 void stop() {
@@ -791,48 +812,45 @@ void setBrick() {
       block2.brick[i][j] = 0;
     }
   }
-  
+
   ArrayList<int[]> initPos = new ArrayList<int[]>();
-  initPos.add(new int[]{0,1});
-  initPos.add(new int[]{1,1});
-  
+  initPos.add(new int[]{0, 1});
+  initPos.add(new int[]{1, 1});
+
   for (int i=0; i<3; i++) {
-    initPos.add(new int[]{i,3});
+    initPos.add(new int[]{i, 3});
   }
   for (int i=0; i<4; i++) {
-    initPos.add(new int[]{i,5});
+    initPos.add(new int[]{i, 5});
   }
 
-  initPos.add(new int[]{19,1});
-  initPos.add(new int[]{18,1});
+  initPos.add(new int[]{19, 1});
+  initPos.add(new int[]{18, 1});
   for (int i=0; i<3; i++) {
-    initPos.add(new int[]{19-i,3});
+    initPos.add(new int[]{19-i, 3});
   }
   for (int i=0; i<4; i++) {
-    initPos.add(new int[]{19-i,5});
+    initPos.add(new int[]{19-i, 5});
   }
-  
-  for (int[] b: initPos){
+
+  for (int[] b : initPos) {
     block2.brick[b[0]][b[1]] = 1;
   }
-  for(int i=0; i<5; i++){
+  for (int i=0; i<5; i++) {
     int k = (int)random(initPos.size());
     int[] b = initPos.get(k);
     block2.brick[b[0]][b[1]] = 2;
     initPos.remove(k);
   }
-
 }
 
-void drawPoints(int x, int y, int point){
+void drawPoints(int x, int y, int point, int digit) {
   int p = 0;
   PImage img = new PImage();
-  for (int i=2; i>=0; i--){
+  for (int i=digit-1; i>=0; i--) {
     p = point%10;
     point = point/10;
-    print(p+" ");
     img = numbers[p];
     image(img, x+(i*8*n), y, 8*n, 16*n);
   }
-  println();
 }
