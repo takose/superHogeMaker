@@ -97,11 +97,11 @@ void setup() {
   block2 = new Block(1, n);
 
   initialize();
+  frameRate(20);
 }
 
 
 void draw() {
-
   switch(page) {
 
   case 0:
