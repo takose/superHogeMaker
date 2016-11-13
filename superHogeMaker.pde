@@ -573,7 +573,7 @@ void draw() {
           player.right=false;
           player.left=false;
           player.jumping=false;
-          stop();
+          playerPoint--;
         }
       }
       if (!e.alive && e.time>4) {
@@ -648,8 +648,8 @@ void draw() {
      初期化してスタート画面へ
      変数増やしたくないのでplayerのtimeで代用
      */
-    if (!player.alive && player.time>=30) {
-      initialize();
+    if (!player.alive && player.time>=10) {
+      player.alive = true;
     } else if (player.finish && player.time>=60) {
       initialize();
     }
