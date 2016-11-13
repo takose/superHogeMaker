@@ -6,7 +6,6 @@ import ddf.minim.ugens.*;
 import ddf.minim.effects.*;
 
 import processing.serial.*;
-import ddf.minim.*;
 
 Serial serial;
 Minim minim;
@@ -93,11 +92,11 @@ void setup() {
   block2 = new Block(1, n);
 
   initialize();
+  frameRate(20);
 }
 
 
 void draw() {
-
   switch(page) {
 
   case 0:
