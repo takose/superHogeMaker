@@ -566,13 +566,12 @@ void draw() {
           playerPoint++;
         } else {
           //キャラ死亡でゲームオーバー
-          gameover.rewind();
-          gameover.play();
           player.alive=false;
           player.time=0;
           player.right=false;
           player.left=false;
           player.jumping=false;
+          playerPoint--;
           stop();
         }
       }
@@ -649,7 +648,7 @@ void draw() {
      変数増やしたくないのでplayerのtimeで代用
      */
     if (!player.alive && player.time>=30) {
-      initialize();
+      player.alive = true;
     } else if (player.finish && player.time>=60) {
       initialize();
     }
