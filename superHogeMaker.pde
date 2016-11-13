@@ -18,7 +18,7 @@ int m=3;  //背景の枚数。ステージの長さ
 int page;  //どの画面にいるか
 int backX;  //背景X座標
 PImage [] back=new PImage[m];  //背景
-PImage title, start, play, make, battle, returnButton;  //タイトルと各種ボタン
+PImage title, start, play, make, battle, returnButton, lose, win;  //タイトルと各種ボタン
 Block block;
 
 //あそぶモード用変数
@@ -86,6 +86,8 @@ void setup() {
   clock = loadImage("clock2.png");
   pointP = loadImage("pointP.png");
   pointB = loadImage("pointB.png");
+  lose = loadImage("lose.png");
+  win = loadImage("win.png");
 
   block = new Block(m, n);
   player=new Player(100, 10);
@@ -639,6 +641,13 @@ void draw() {
     remainTime = 30-(millis()/1000-startTime);
     if (remainTime<0) {
       remainTime = 0;
+      player.time=0;
+      player.finish=true;
+      player.time=0;
+      fin.rewind();
+      fin.play();
+      stop();
+      page = 5;
     }
     drawPoints(18*16*n, 0, remainTime, 2);
     image(clock, 17*16*n, 0, 16*n, 16*n);
@@ -650,10 +659,25 @@ void draw() {
      */
     if (!player.alive && player.time>=10) {
       player.alive = true;
-    } else if (player.finish && player.time>=60) {
-      initialize();
     }
 
+    break;
+
+  case 5:
+    image(back[0], 0, 0, width, height);
+    PImage img;
+    //一旦素材は適当
+    if (boardPoint>playerPoint) {
+      img = win;
+    } else if (boardPoint<playerPoint) {
+      img = play;
+    } else {
+      img = lose;
+    }
+    image(img, width/2-img.width, height/3-img.height/2, img.width*n, img.height*n);
+    drawPoints(width/4-16*n, height/2-8*n, playerPoint, 4);
+    drawPoints(width/4*3-16*n, height/2-8*n, boardPoint, 4);
+    image(returnButton, 0, 0, 48*n, 16*n);
     break;
   }
 }
@@ -761,6 +785,14 @@ void mousePressed() {
     }
 
     break;
+
+  case 5:
+    if (mouseY<=16*n && mouseX<=48*n) {
+      button.rewind();
+      button.play();
+      page=0;
+    }
+    break;
   }
 }
 
@@ -789,7 +821,6 @@ void initialize() {
   player.finish=false;
   bgmFlg=false;
   block.area=0;
-  playerPoint = 0;
   block2.area = 0;
   setBrick();  //初期配置
   startTime = 0;
