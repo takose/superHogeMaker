@@ -18,7 +18,7 @@ class Player {
     finish=false;
     posX=x;
     posY=y;
-    speedX=4;
+    speedX=8;
     speedY=5;
     time=0;
     isFacingRight=true;
@@ -88,7 +88,7 @@ class Player {
   }
 
   void down() {
-    posY+=n*9.8*time/10;
+    posY+=n*12*time/10;
   }
 
   void jump() {
