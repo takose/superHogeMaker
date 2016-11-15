@@ -733,6 +733,8 @@ void keyReleased() {
   if (key == 'b') {
     stop();
     initialize();
+  }else if(key == 's'){
+    save(  "screenshot/" + frameCount+".png" );
   }
 }
 
