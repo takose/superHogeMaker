@@ -3,8 +3,8 @@ class Enemy extends Player {
   PImage [] eneL = new PImage[4];
   PImage [] eneR = new PImage[4];
 
-  Enemy(int ex, int ey, int _kind) {
-    super(ex, ey);
+  Enemy(int ex, int ey, int num, int _kind) {
+    super(ex, ey, num);
     kind = _kind;
     if (kind==0) {
       PImage _eneL = loadImage("walkEneL.png");
