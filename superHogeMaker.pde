@@ -18,7 +18,7 @@ int m=3;  //背景の枚数。ステージの長さ
 int page;  //どの画面にいるか
 int backX;  //背景X座標
 PImage [] back=new PImage[m];  //背景
-PImage title, start, play, make, battle, returnButton, lose, win;  //タイトルと各種ボタン
+PImage title, start, play, make, battle, returnButton, win_b, win_p, tie;  //タイトルと各種ボタン
 Block block;
 
 //あそぶモード用変数
@@ -86,8 +86,9 @@ void setup() {
   clock = loadImage("clock2.png");
   pointP = loadImage("pointP.png");
   pointB = loadImage("pointB.png");
-  lose = loadImage("lose.png");
-  win = loadImage("win.png");
+  win_b = loadImage("win_b.png");
+  win_p = loadImage("win_p.png");
+  tie = loadImage("tie.png");
 
   block = new Block(m, n);
   player=new Player(100, 10);
@@ -668,13 +669,13 @@ void draw() {
     PImage img;
     //一旦素材は適当
     if (boardPoint>playerPoint) {
-      img = win;
+      img = win_b;
     } else if (boardPoint<playerPoint) {
-      img = play;
+      img =  win_p;
     } else {
-      img = lose;
+      img = tie;
     }
-    image(img, width/2-img.width, height/3-img.height/2, img.width*n, img.height*n);
+    image(img, width/2-(img.width/2)*n, height/3-(img.height/2)*n, img.width*n, img.height*n);
     drawPoints(width/4-16*n, height/2-8*n, playerPoint, 4);
     drawPoints(width/4*3-16*n, height/2-8*n, boardPoint, 4);
     image(returnButton, 0, 0, 48*n, 16*n);
