@@ -50,6 +50,8 @@ void settings() {
 }
 
 void setup() {
+  frameRate(30);
+
   //シリアル
   if (Serial.list().length>0) {
     println("serial="+Serial.list());
@@ -93,7 +95,7 @@ void setup() {
   tie = loadImage("tie.png");
 
   block = new Block(m, n);
-  player=new Player(100, 10);
+  player=new Player(100, 10, n);
   items= new ArrayList<Item>();
   enemy= new ArrayList<Enemy>();
   broken=new ArrayList<int[]>();
@@ -166,7 +168,7 @@ void draw() {
 
 
     //  println("time="+player.time);
-    if (frameCount%6==0) {
+    if (frameCount%3==0) {
       //キャラ・敵の落下用にtimeを増やす
       player.time++;
       for (Enemy e : enemy) {
@@ -188,14 +190,13 @@ void draw() {
         if (eneY==1) {
           eneY=height-48*n;
         }
-        enemy.add(new Enemy((int)random(width/4, width)+eneNumber*width, eneY, (int)random(2)));
+        enemy.add(new Enemy((int)random(width/4, width)+eneNumber*width, eneY, n, (int)random(2)));
         eneNumber++;
       }
       //finish
       if (player.posX>width*m+16*n) {
         player.time=0;
         player.finish=true;
-        player.time=0;
         fin.rewind();
         fin.play();
         stop();
@@ -267,7 +268,7 @@ void draw() {
     //敵
     for (Enemy e : enemy) {
       if (dist(e.posX, e.posY, player.posX, player.posY)<=12*n && e.alive && player.alive) {
-        if (player.posY<e.posY) {
+        if (player.posY<e.posY && player.alive && e.touch) {
           //キャラのほうが上にいるなら敵消滅
           e.alive=false;
           e.time=0;
@@ -430,8 +431,7 @@ void draw() {
       bgmFlg=true;
     }
 
-    //  println("time="+player.time);
-    if (frameCount%6==0) {
+    if (frameCount%3==0) {
       //キャラ・敵の落下用にtimeを増やす
       player.time++;
       for (Enemy e : enemy) {
@@ -519,7 +519,7 @@ void draw() {
     //敵
 
     //一定時間たったら敵を出現
-    if (frameCount % 100 == 0 && player.alive) {
+    if (frameCount % 60 == 0 && player.alive) {
       //進行方向
       int eneX = (int)random(2);
       if (eneX==0) {
@@ -535,15 +535,15 @@ void draw() {
       //空から
       if (eneY<=0) {
         eneY=-16*n;
-        enemy.add(new Enemy((int)random(16*n*6, width-16*n*5), eneY, (int)random(2)));
+        enemy.add(new Enemy((int)random(16*n*6, width-16*n*5), eneY, n, (int)random(2)));
       } else if (eneY>=1 && eneY<=3) {
         //途中のブロックの上
         eneY=(2*eneY-2+3)*16*n-4;
-        enemy.add(new Enemy(eneX, eneY, (int)random(2)));
+        enemy.add(new Enemy(eneX, eneY, n, (int)random(2)));
       } else {
         //地面
         eneY=height-16*3*n-4;
-        enemy.add(new Enemy(eneX, eneY, (int)random(2)));
+        enemy.add(new Enemy(eneX, eneY, n, (int)random(2)));
       }
 
       //進行方向設定
@@ -562,7 +562,7 @@ void draw() {
 
       //キャラとの当たり判定
       if (dist(e.posX, e.posY, player.posX, player.posY)<=12*n && e.alive && player.alive) {
-        if (player.posY<e.posY && player.alive) {
+        if (player.posY<e.posY && player.alive && e.touch) {
           //キャラのほうが上にいるなら敵消滅
           e.alive=false;
           e.time=0;
@@ -634,7 +634,7 @@ void draw() {
     if (boardPoint<0) {
       boardPoint = 0;
     }
-
+    //ポイント表示
     image(pointP, 16*n, 11*16*n, 16*n, 16*n);
     drawPoints(2*16*n, 11*16*n, playerPoint, 4);
     image(pointB, 16*16*n, 11*16*n, 16*n, 16*n);
@@ -646,7 +646,6 @@ void draw() {
       remainTime = 0;
       player.time=0;
       player.finish=true;
-      player.time=0;
       fin.rewind();
       fin.play();
       stop();
@@ -655,11 +654,7 @@ void draw() {
     drawPoints(18*16*n, 0, remainTime, 2);
     image(clock, 17*16*n, 0, 16*n, 16*n);
 
-    /*
-    ゲームオーバーから3秒くらいしたら
-     初期化してスタート画面へ
-     変数増やしたくないのでplayerのtimeで代用
-     */
+    //敵に当たって少し経ったら生き返る
     if (!player.alive && player.time>=10) {
       player.alive = true;
     }
@@ -795,6 +790,7 @@ void mousePressed() {
     if (mouseY<=16*n && mouseX<=48*n) {
       button.rewind();
       button.play();
+      initialize();
       page=0;
     }
     break;
@@ -815,12 +811,13 @@ void initialize() {
   player.alive=true;
   player.posX=100;
   player.posY=10;
+  player.isFacingRight = true;
   block.loadFromFile();
   items.clear();  //前回のアイテムが残らないようリストを空にする
   enemy.clear();  //前回の敵以下同文
   broken.clear();
   tweet.clear();
-  enemy.add(new Enemy((int)random(width/2, width), 0, (int)random(2)) );  //最初の一匹
+  enemy.add(new Enemy((int)random(width/2, width), 0, n, (int)random(2)) );  //最初の一匹
   minim=new Minim(this);
   bgm = minim.loadFile( "BGM.mp3" );
   player.finish=false;

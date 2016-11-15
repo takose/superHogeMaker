@@ -5,21 +5,22 @@ class Player {
   PImage [] jumpR=new PImage[2];  //ジャンプ右向き
   PImage [] jumpL=new PImage[2];  //ジャンプ左向き
   PImage dead;  //死に顔
-  int n = displayHeight / (16 * 12);  //拡大倍率
+  int n;  //拡大倍率
   int beforeFloor;
   boolean touch;  //床についてるか(jump中はtrue)
   boolean isFacingRight;  //どっち向いてるか(右でtrue)
   boolean alive, finish;  //生死
   boolean right, left, jumping;  //左右に進んでいるか
 
-  Player(int x, int y) {
+  Player(int x, int y, int num) {
+    n=num;
     touch=false;
     alive=true;
     finish=false;
     posX=x;
     posY=y;
-    speedX=4;
-    speedY=5;
+    speedX=1;
+    speedY=7;
     time=0;
     isFacingRight=true;
 
@@ -80,11 +81,11 @@ class Player {
   }
 
   void moveRight() {
-    posX+=speedX;
+    posX+=speedX*n;
   }
 
   void moveLeft() {
-    posX-=speedX;
+    posX-=speedX*n;
   }
 
   void down() {

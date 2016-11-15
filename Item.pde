@@ -1,21 +1,21 @@
 class Item {
   int posX, posY;
   PImage img;
-  int n,kind;
+  int n, kind;
 
   Item(int x, int y, int num, int _kind) {
     n=num;
     posX=x*16*n;
     posY=y*16*n+32*n;
     kind = _kind;
-    switch(kind){
-      case 0:
-        img=loadImage("stone.png");
+    switch(kind) {
+    case 0:
+      img=loadImage("stone.png");
       break;
-      case 1:
-        img=loadImage("amethyst.png");
+    case 1:
+      img=loadImage("amethyst.png");
       break;
-      default:
+    default:
       break;
     }
     kind = _kind;
