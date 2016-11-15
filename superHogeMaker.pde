@@ -185,7 +185,7 @@ void draw() {
         if (eneY==1) {
           eneY=height-48*n;
         }
-        enemy.add(new Enemy((int)random(width/4, width)+eneNumber*width, eneY));
+        enemy.add(new Enemy((int)random(width/4, width)+eneNumber*width, eneY, (int)random(2)));
         eneNumber++;
       }
       //finish
@@ -532,15 +532,15 @@ void draw() {
       //空から
       if (eneY<=0) {
         eneY=-16*n;
-        enemy.add(new Enemy((int)random(16*n*6, width-16*n*5), eneY));
+        enemy.add(new Enemy((int)random(16*n*6, width-16*n*5), eneY, (int)random(2)));
       } else if (eneY>=1 && eneY<=3) {
         //途中のブロックの上
         eneY=(2*eneY-2+3)*16*n-4;
-        enemy.add(new Enemy(eneX, eneY));
+        enemy.add(new Enemy(eneX, eneY, (int)random(2)));
       } else {
         //地面
         eneY=height-16*3*n-4;
-        enemy.add(new Enemy(eneX, eneY));
+        enemy.add(new Enemy(eneX, eneY, (int)random(2)));
       }
 
       //進行方向設定
@@ -785,7 +785,7 @@ void initialize() {
   enemy.clear();  //前回の敵以下同文
   broken.clear();
   tweet.clear();
-  enemy.add(new Enemy((int)random(width/2, width), 0) );  //最初の一匹
+  enemy.add(new Enemy((int)random(width/2, width), 0, (int)random(2)) );  //最初の一匹
   minim=new Minim(this);
   bgm = minim.loadFile( "BGM.mp3" );
   player.finish=false;
