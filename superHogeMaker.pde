@@ -9,8 +9,9 @@ import processing.serial.*;
 
 Serial serial;
 Minim minim;
+
 AudioPlayer bgm;
-AudioPlayer jumpSound, fin, brokenSound, itemSound, bird, gameover, crush, button;
+AudioPlayer jumpSound, fin, brokenSound, itemSound, itemGet, gameover, crush, button, hitEne;
 
 //モード共通で使う変数
 int n;  //拡大倍率
@@ -62,10 +63,11 @@ void setup() {
   fin = minim.loadFile("fin.mp3");
   brokenSound = minim.loadFile("broken.mp3");
   itemSound = minim.loadFile("nyu2.mp3");
-  bird = minim.loadFile("bird.mp3");
+  itemGet = minim.loadFile("decision-3.mp3");
   gameover = minim.loadFile("gameover.mp3");
   crush = minim.loadFile("crushed.mp3");
   button = minim.loadFile("decision3.mp3");
+  hitEne = minim.loadFile("cancel6.mp3");
 
   title=loadImage("titlelogo2.png");
   start=loadImage("startButton.png");
@@ -243,8 +245,8 @@ void draw() {
       if (i.isItem(player.posX+8*n, player.posY+8*n)) {
         //キャラとぶつかったら使用されて消滅
 
-        //bird.rewind();
-        //bird.play();
+        itemGet.rewind();
+        itemGet.play();
         items.remove(i);
         break;
       }
@@ -487,8 +489,8 @@ void draw() {
         //キャラとぶつかったら使用されて消滅
         //つぶやく
 
-        //bird.rewind();
-        //bird.play();
+        itemGet.rewind();
+        itemGet.play();
         items.remove(i);
         playerPoint++;
 
@@ -565,9 +567,9 @@ void draw() {
           crush.play();
           playerPoint++;
         } else {
-          //キャラ死亡でゲームオーバー
-          gameover.rewind();
-          gameover.play();
+          //キャラ死亡、一時操作ストップ
+          hitEne.rewind();
+          hitEne.play();
           player.alive=false;
           player.time=0;
           player.right=false;
