@@ -38,10 +38,12 @@ boolean move;  //画面表示の移動フラグ
 
 //対戦モード用変数
 Block block2;  //対戦用のブロック配列
-int boardPoint, playerPoint;  //それぞれのポイント
+int boardPoint, boardCount, comp, playerPoint;  //それぞれのポイント
 PImage [] numbers = new PImage[10];  //数字
 PImage clock, pointP, pointB;
 int startTime, remainTime;
+
+String str,oldstr;
 
 void settings() {
   n = displayHeight / (16 * 12);
@@ -232,8 +234,8 @@ void draw() {
         block.brick[chara[0]][chara[1]]=4;
         broken.add(new int[] {
           chara[0], chara[1], 0
-          }
-          );
+        }
+        );
       }
     }
 
@@ -394,19 +396,20 @@ void draw() {
     image(back[0], 0, 0, width, height);
 
     //ブロック
-
+    
     //ブロックの情報取得
     if (Serial.list().length>0) {
       if (serial.available()>0 && !move) {
-        String str = serial.readStringUntil('e');
-        //println(str);
+        oldstr = str;
+        str = serial.readStringUntil('e');
+        println(str);
         block2.getSerialData_battle(str);
         serial.write('a');
       } else {
         println("not available");
       }
     }
-
+    
     for (int[] b : broken) {
       /*
       壊れたブロック消滅の時間を計る。
@@ -474,8 +477,8 @@ void draw() {
         block2.brick[chara[0]][chara[1]]=4;
         broken.add(new int[] {
           chara[0], chara[1], 0
-          }
-          );
+        }
+        );
       }
     }
 
@@ -495,7 +498,7 @@ void draw() {
         itemGet.rewind();
         itemGet.play();
         items.remove(i);
-        playerPoint++;
+        playerPoint+=3;
 
         break;
       }
@@ -568,7 +571,7 @@ void draw() {
           e.time=0;
           crush.rewind();
           crush.play();
-          playerPoint++;
+          playerPoint+=3;
         } else {
           //キャラ死亡、一時操作ストップ
           hitEne.rewind();
@@ -617,16 +620,27 @@ void draw() {
     }
 
     //ポイント
-
     //ボード側点数カウント
-    boardPoint = 0;
+    boardCount=0;
     for (int i=5; i<15; i++) {
       for (int j=0; j<6; j++) {
         if (block2.brick[i][j]>0) {
-          boardPoint++;
+          boardCount++;
         }
       }
     }
+    if(!str.equals(oldstr)){
+      comp++;
+    }
+    println("comp:" + comp);
+    if(frameCount%60==0){
+      if (boardCount<=5) {
+        boardPoint--;
+      } else if(boardCount>=5 && comp>3) {
+        boardPoint++;
+        comp = 0;
+      }
+    } 
 
     if (playerPoint<0) {
       playerPoint = 0;
@@ -728,7 +742,7 @@ void keyReleased() {
   if (key == 'b') {
     stop();
     initialize();
-  }else if(key == 's'){
+  } else if (key == 's') {
     save(  "screenshot/" + frameCount+".png" );
   }
 }
@@ -827,6 +841,8 @@ void initialize() {
   setBrick();  //初期配置
   startTime = 0;
   remainTime = 30;
+  playerPoint = 0;
+  boardPoint = 0;
 }
 
 void stop() {
@@ -847,23 +863,47 @@ void setBrick() {
   }
 
   ArrayList<int[]> initPos = new ArrayList<int[]>();
-  initPos.add(new int[]{0, 1});
-  initPos.add(new int[]{1, 1});
+  initPos.add(new int[] {
+    0, 1
+  }
+  );
+  initPos.add(new int[] {
+    1, 1
+  }
+  );
 
   for (int i=0; i<3; i++) {
-    initPos.add(new int[]{i, 3});
+    initPos.add(new int[] {
+      i, 3
+    }
+    );
   }
   for (int i=0; i<4; i++) {
-    initPos.add(new int[]{i, 5});
+    initPos.add(new int[] {
+      i, 5
+    }
+    );
   }
 
-  initPos.add(new int[]{19, 1});
-  initPos.add(new int[]{18, 1});
+  initPos.add(new int[] {
+    19, 1
+  }
+  );
+  initPos.add(new int[] {
+    18, 1
+  }
+  );
   for (int i=0; i<3; i++) {
-    initPos.add(new int[]{19-i, 3});
+    initPos.add(new int[] {
+      19-i, 3
+    }
+    );
   }
   for (int i=0; i<4; i++) {
-    initPos.add(new int[]{19-i, 5});
+    initPos.add(new int[] {
+      19-i, 5
+    }
+    );
   }
 
   for (int[] b : initPos) {
