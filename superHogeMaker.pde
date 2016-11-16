@@ -483,12 +483,7 @@ void draw() {
         itemGet.rewind();
         itemGet.play();
         items.remove(i);
-<<<<<<< HEAD
         playerPoint+=3;
-
-=======
-        playerPoint+=10;
->>>>>>> 6fd998bc5cdf12238027fbd38a0b4cd3d3d007ce
         break;
       }
     }
@@ -553,11 +548,7 @@ void draw() {
           e.time=0;
           crush.rewind();
           crush.play();
-<<<<<<< HEAD
           playerPoint+=3;
-=======
-          playerPoint+=10;
->>>>>>> 6fd998bc5cdf12238027fbd38a0b4cd3d3d007ce
         } else {
           //キャラ死亡、一時操作ストップ
           hitEne.rewind();
@@ -611,11 +602,7 @@ void draw() {
     for (int i=5; i<15; i++) {
       for (int j=0; j<6; j++) {
         if (block2.brick[i][j]>0) {
-<<<<<<< HEAD
           boardCount++;
-=======
-          boardPoint+=10;
->>>>>>> 6fd998bc5cdf12238027fbd38a0b4cd3d3d007ce
         }
       }
     }
