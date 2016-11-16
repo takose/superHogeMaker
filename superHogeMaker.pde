@@ -19,18 +19,16 @@ int m=3;  //背景の枚数。ステージの長さ
 int page;  //どの画面にいるか
 int backX;  //背景X座標
 PImage [] back=new PImage[m];  //背景
-PImage title, start, play, make, battle, returnButton, win_b, win_p, tie;  //タイトルと各種ボタン
+PImage title, start, play, make, battle, returnButton;  //タイトルと各種ボタン
 Block block;
 
 //あそぶモード用変数
 PImage goal;  //ゴールの旗
-PImage FMS;  //おれは(略
 int eneNumber;  //敵出現タイミング・数管理
 Player player;
 ArrayList<Item> items;
 ArrayList<Enemy> enemy;
 ArrayList<int[]> broken;  //こわれたブロック
-ArrayList<int[]> tweet;  //アイテムの効果(つぶやき)
 boolean bgmFlg=false;
 
 //つくるモード用変数
@@ -40,7 +38,7 @@ boolean move;  //画面表示の移動フラグ
 Block block2;  //対戦用のブロック配列
 int boardPoint, boardCount, comp, playerPoint;  //それぞれのポイント
 PImage [] numbers = new PImage[10];  //数字
-PImage clock, pointP, pointB;
+PImage clock, pointP, pointB, win_b, win_p, tie;  //アイコン、勝敗
 int startTime, remainTime;
 
 String str,oldstr;
@@ -84,7 +82,6 @@ void setup() {
     back[i]=back[0];
   }
   goal=loadImage("flag2.png");
-  FMS=loadImage("tweet_big.png");
   PImage num = loadImage("numbers_line.png");
   for (int i=0; i<10; i++) {
     numbers[i] = num.get(8*i, 0, 8, 16);
@@ -101,7 +98,6 @@ void setup() {
   items= new ArrayList<Item>();
   enemy= new ArrayList<Enemy>();
   broken=new ArrayList<int[]>();
-  tweet=new ArrayList<int[]>();
 
   block2 = new Block(1, n);
 
@@ -169,7 +165,6 @@ void draw() {
     block.display();
 
 
-    //  println("time="+player.time);
     if (frameCount%3==0) {
       //キャラ・敵の落下用にtimeを増やす
       player.time++;
@@ -182,7 +177,6 @@ void draw() {
     //キャラ移動など
 
     if (player.right && player.posX<width*m+32*n && !block.isRight(player.posX+16*n, player.posY+14*n)) {
-      //if(!block.rightBlock(player.posX,player.posY))
       player.moveRight();
 
       //キャラが一定座標まで来たら敵を出現
@@ -250,7 +244,6 @@ void draw() {
     for (Item i : items) {
       if (i.isItem(player.posX+8*n, player.posY+8*n)) {
         //キャラとぶつかったら使用されて消滅
-
         itemGet.rewind();
         itemGet.play();
         items.remove(i);
@@ -289,6 +282,7 @@ void draw() {
         }
       }
       if (!e.alive && e.time>4) {
+        //踏まれてしばらくしたら消える
         enemy.remove(e);
         break;
       }
@@ -311,11 +305,6 @@ void draw() {
       e.draw();
     }
 
-    //つぶやき
-    for (int[] t : tweet) {
-      image(FMS, player.posX-t[0]*n, player.posY-t[1]*n, 80*(n-1), 16*(n-1));
-    }
-
     popMatrix();
 
     /*
@@ -328,7 +317,6 @@ void draw() {
     } else if (player.finish && player.time>=60) {
       initialize();
     }
-    //println(bgmFlg);
     break;
 
     /*-----------------------*/
@@ -426,13 +414,13 @@ void draw() {
     block2.display();
 
 
-
-    //キャラ
     if (!bgmFlg&&player.alive) {
       bgm.rewind();
       bgm.play();
       bgmFlg=true;
     }
+
+    //キャラ
 
     if (frameCount%3==0) {
       //キャラ・敵の落下用にtimeを増やす
@@ -454,7 +442,6 @@ void draw() {
     }
 
     //床座標取得
-    //int floor;
     floor = block2.isFloor(player.posX+8*n, player.posY+8*n);
     player.move(floor);
 
@@ -493,13 +480,15 @@ void draw() {
     for (Item i : items) {
       if (i.isItem(player.posX+8*n, player.posY+8*n)) {
         //キャラとぶつかったら使用されて消滅
-        //つぶやく
-
         itemGet.rewind();
         itemGet.play();
         items.remove(i);
+<<<<<<< HEAD
         playerPoint+=3;
 
+=======
+        playerPoint+=10;
+>>>>>>> 6fd998bc5cdf12238027fbd38a0b4cd3d3d007ce
         break;
       }
     }
@@ -511,11 +500,6 @@ void draw() {
      */
     for (Item i : items) {
       i.display();
-    }
-
-    //つぶやき
-    for (int[] t : tweet) {
-      image(FMS, player.posX-t[0]*n, player.posY-t[1]*n, 80*(n-1), 16*(n-1));
     }
 
 
@@ -535,8 +519,8 @@ void draw() {
       int eneY=(int)random(-5, 5);
       println("pos="+eneY);
 
-      //空から
       if (eneY<=0) {
+        //空から
         eneY=-16*n;
         enemy.add(new Enemy((int)random(16*n*6, width-16*n*5), eneY, n, (int)random(2)));
       } else if (eneY>=1 && eneY<=3) {
@@ -556,10 +540,8 @@ void draw() {
         enemy.get(enemy.size()-1).isFacingRight = false;
       }
       eneNumber++;
-
-      //println(eneX+", "+eneY+", "+enemy.get(enemy.size()-1).isFacingRight);
     }
-    //i*16*n, (j+3)*16*n
+
 
     for (Enemy e : enemy) {
 
@@ -571,7 +553,11 @@ void draw() {
           e.time=0;
           crush.rewind();
           crush.play();
+<<<<<<< HEAD
           playerPoint+=3;
+=======
+          playerPoint+=10;
+>>>>>>> 6fd998bc5cdf12238027fbd38a0b4cd3d3d007ce
         } else {
           //キャラ死亡、一時操作ストップ
           hitEne.rewind();
@@ -581,7 +567,7 @@ void draw() {
           player.right=false;
           player.left=false;
           player.jumping=false;
-          playerPoint--;
+          playerPoint-=10;
         }
       }
       if (!e.alive && e.time>4) {
@@ -625,7 +611,11 @@ void draw() {
     for (int i=5; i<15; i++) {
       for (int j=0; j<6; j++) {
         if (block2.brick[i][j]>0) {
+<<<<<<< HEAD
           boardCount++;
+=======
+          boardPoint+=10;
+>>>>>>> 6fd998bc5cdf12238027fbd38a0b4cd3d3d007ce
         }
       }
     }
@@ -642,12 +632,7 @@ void draw() {
       }
     } 
 
-    if (playerPoint<0) {
-      playerPoint = 0;
-    }
-    if (boardPoint<0) {
-      boardPoint = 0;
-    }
+
     //ポイント表示
     image(pointP, 16*n, 11*16*n, 16*n, 16*n);
     drawPoints(2*16*n, 11*16*n, playerPoint, 4);
@@ -658,8 +643,8 @@ void draw() {
     remainTime = 30-(millis()/1000-startTime);
     if (remainTime<0) {
       remainTime = 0;
-      player.time=0;
-      player.finish=true;
+      player.time = 0;
+      player.finish = true;
       fin.rewind();
       fin.play();
       stop();
@@ -676,9 +661,10 @@ void draw() {
     break;
 
   case 5:
+    //こうぼうせん勝敗表示
     image(back[0], 0, 0, width, height);
     PImage img;
-    //一旦素材は適当
+
     if (boardPoint>playerPoint) {
       img = win_b;
     } else if (boardPoint<playerPoint) {
@@ -805,7 +791,6 @@ void mousePressed() {
       button.rewind();
       button.play();
       initialize();
-      page=0;
     }
     break;
   }
@@ -830,7 +815,6 @@ void initialize() {
   items.clear();  //前回のアイテムが残らないようリストを空にする
   enemy.clear();  //前回の敵以下同文
   broken.clear();
-  tweet.clear();
   enemy.add(new Enemy((int)random(width/2, width), 0, n, (int)random(2)) );  //最初の一匹
   minim=new Minim(this);
   bgm = minim.loadFile( "BGM.mp3" );
@@ -838,7 +822,7 @@ void initialize() {
   bgmFlg=false;
   block.area=0;
   block2.area = 0;
-  setBrick();  //初期配置
+  setBrick();  //こうぼうせんブロック初期配置
   startTime = 0;
   remainTime = 30;
   playerPoint = 0;
@@ -918,8 +902,12 @@ void setBrick() {
 }
 
 void drawPoints(int x, int y, int point, int digit) {
+  //ポイント表示
   int p = 0;
   PImage img = new PImage();
+  if (point<0) {
+    point = 0;
+  }
   for (int i=digit-1; i>=0; i--) {
     p = point%10;
     point = point/10;
