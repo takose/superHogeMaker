@@ -18,9 +18,7 @@ class Block {
 
 
   int isFloor(int _x, int _y) {
-    /*int []chara=squares(_x,_y);
-     int x=chara[0];
-     int y=chara[1];*/
+
     int x=_x/(16*n);
     int y;
     if (x>=brick.length) {
@@ -140,7 +138,7 @@ class Block {
 
 
   void getSerialData_battle(String inString) {
-    //文字列データをbrickに入れる
+    //文字列データをbrickに入れる（対戦用）
     //println("inString="+inString);
     String lines[] = split(inString, '/'); 
     try {

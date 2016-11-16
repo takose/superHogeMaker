@@ -25,7 +25,7 @@ class Enemy extends Player {
       eneR[3] = loadImage("ghostR2.png");
       dead = loadImage("ghostDead.png");
     }
-    isFacingRight = false;
+    isFacingRight = false;  //あそぶモードでは全部左向きのため
   }
 
   void draw() {

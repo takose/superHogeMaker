@@ -38,9 +38,6 @@ class Player {
     walkL[4]=walkL[2];
     walkL[5]=walkL[1];
 
-
-
-
     jumpR[0]=loadImage("jumpR1.png");
     jumpR[1]=loadImage("jumpR2.png");
 
