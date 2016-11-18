@@ -29,7 +29,6 @@ Player player;
 ArrayList<Item> items;
 ArrayList<Enemy> enemy;
 ArrayList<int[]> broken;  //こわれたブロック
-boolean bgmFlg=false;
 
 //つくるモード用変数
 boolean move;  //画面表示の移動フラグ
@@ -40,8 +39,7 @@ int boardPoint, boardCount, comp, playerPoint;  //それぞれのポイント
 PImage [] numbers = new PImage[10];  //数字
 PImage clock, pointP, pointB, win_b, win_p, tie;  //アイコン、勝敗
 int startTime, remainTime;
-
-String str,oldstr;
+String oldstr;
 
 void settings() {
   n = displayHeight / (16 * 12);
@@ -76,7 +74,7 @@ void setup() {
   play=loadImage("playButtonBig.png");
   make=loadImage("makeButtonBig.png");
   battle=loadImage("battle1.png");
-  returnButton=loadImage("returnButton.png");
+  returnButton=loadImage("returnButton2.png");
   back[0]=loadImage("GameBackground4.png");
   for (int i=0; i<back.length; i++) {
     back[i]=back[0];
@@ -87,8 +85,8 @@ void setup() {
     numbers[i] = num.get(8*i, 0, 8, 16);
   }
   clock = loadImage("clock2.png");
-  pointP = loadImage("pointP.png");
-  pointB = loadImage("pointB.png");
+  pointP = loadImage("walk1BW.png");
+  pointB = loadImage("block1BW.png");
   win_b = loadImage("win_b.png");
   win_p = loadImage("win_p.png");
   tie = loadImage("tie.png");
@@ -122,7 +120,8 @@ void draw() {
     image(play, 16*2*n, 16*5*n, 48*n, 32*n);
     image(battle, 16*7*n, 16*5*n, 16*6*n, 32*n);
     image(make, 16*15*n, 16*5*n, 48*n, 32*n);
-    image(returnButton, 0, 0, 48*n, 16*n);
+    //image(returnButton, 0, 0, 48*n, 16*n);
+    image(returnButton, width/2-64*n/2, 16*8*n, 64*n, 16*n);
     break;
 
   case 2:
@@ -134,10 +133,9 @@ void draw() {
     }
     image(goal, backX+width*m, 0, 48*n, height);
 
-    if (!bgmFlg&&player.alive) {
+    if (!bgm.isPlaying()&&player.alive) {
       bgm.rewind();
       bgm.play();
-      bgmFlg=true;
     }
 
     //キャラの動きに合わせてスクロール
@@ -228,8 +226,8 @@ void draw() {
         block.brick[chara[0]][chara[1]]=4;
         broken.add(new int[] {
           chara[0], chara[1], 0
-        }
-        );
+          }
+          );
       }
     }
 
@@ -384,20 +382,25 @@ void draw() {
     image(back[0], 0, 0, width, height);
 
     //ブロック
-    
+
     //ブロックの情報取得
     if (Serial.list().length>0) {
       if (serial.available()>0 && !move) {
-        oldstr = str;
-        str = serial.readStringUntil('e');
+        String str = serial.readStringUntil('e');
         println(str);
         block2.getSerialData_battle(str);
         serial.write('a');
+
+        //ボード側ポイント処理用
+        if (!str.equals(oldstr)) {
+          comp++;
+        }
+        oldstr = str;
       } else {
         println("not available");
       }
     }
-    
+
     for (int[] b : broken) {
       /*
       壊れたブロック消滅の時間を計る。
@@ -414,10 +417,9 @@ void draw() {
     block2.display();
 
 
-    if (!bgmFlg&&player.alive) {
+    if (!bgm.isPlaying()&&player.alive) {
       bgm.rewind();
       bgm.play();
-      bgmFlg=true;
     }
 
     //キャラ
@@ -464,8 +466,8 @@ void draw() {
         block2.brick[chara[0]][chara[1]]=4;
         broken.add(new int[] {
           chara[0], chara[1], 0
-        }
-        );
+          }
+          );
       }
     }
 
@@ -606,18 +608,26 @@ void draw() {
         }
       }
     }
-    if(!str.equals(oldstr)){
-      comp++;
-    }
+    /*if(!str.equals(oldstr)){
+     comp++;
+     }*/
+
     println("comp:" + comp);
-    if(frameCount%60==0){
+    if (frameCount%60==0) {
       if (boardCount<=5) {
         boardPoint--;
-      } else if(boardCount>=5 && comp>3) {
+      } else if (boardCount>=5 && comp>3) {
         boardPoint++;
         comp = 0;
       }
     } 
+
+    if (playerPoint<0) {
+      playerPoint=0;
+    }
+    if (boardPoint<0) {
+      boardPoint=0;
+    }
 
 
     //ポイント表示
@@ -659,10 +669,13 @@ void draw() {
     } else {
       img = tie;
     }
-    image(img, width/2-(img.width/2)*n, height/3-(img.height/2)*n, img.width*n, img.height*n);
-    drawPoints(width/4-16*n, height/2-8*n, playerPoint, 4);
-    drawPoints(width/4*3-16*n, height/2-8*n, boardPoint, 4);
-    image(returnButton, 0, 0, 48*n, 16*n);
+    image(img, width/2-(img.width/2)*n, 3*16*n, img.width*n, img.height*n);
+    image(pointP, 4*16*n, 6*16*n, 16*n, 16*n);
+    drawPoints(5*16*n, 6*16*n, playerPoint, 4);
+    image(pointB, 13*16*n, 6*16*n, 16*n, 16*n);
+    drawPoints(14*16*n, 6*16*n, boardPoint, 4);
+    image(returnButton, width/2-64*n/2, 16*8*n, 64*n, 16*n);
+    //image(returnButton, 0, 0, 48*n, 16*n);
     break;
   }
 }
@@ -806,8 +819,7 @@ void initialize() {
   minim=new Minim(this);
   bgm = minim.loadFile( "BGM.mp3" );
   player.finish=false;
-  bgmFlg=false;
-  block.area=0;
+  block.area = 0;
   block2.area = 0;
   setBrick();  //こうぼうせんブロック初期配置
   startTime = 0;
@@ -818,7 +830,6 @@ void initialize() {
 
 void stop() {
   bgm.rewind();
-  bgmFlg=false;
   bgm.close();
 
   minim.stop();
@@ -836,45 +847,45 @@ void setBrick() {
   ArrayList<int[]> initPos = new ArrayList<int[]>();
   initPos.add(new int[] {
     0, 1
-  }
-  );
+    }
+    );
   initPos.add(new int[] {
     1, 1
-  }
-  );
+    }
+    );
 
   for (int i=0; i<3; i++) {
     initPos.add(new int[] {
       i, 3
-    }
-    );
+      }
+      );
   }
   for (int i=0; i<4; i++) {
     initPos.add(new int[] {
       i, 5
-    }
-    );
+      }
+      );
   }
 
   initPos.add(new int[] {
     19, 1
-  }
-  );
+    }
+    );
   initPos.add(new int[] {
     18, 1
-  }
-  );
+    }
+    );
   for (int i=0; i<3; i++) {
     initPos.add(new int[] {
       19-i, 3
-    }
-    );
+      }
+      );
   }
   for (int i=0; i<4; i++) {
     initPos.add(new int[] {
       19-i, 5
-    }
-    );
+      }
+      );
   }
 
   for (int[] b : initPos) {
