@@ -70,7 +70,7 @@ void setup() {
   hitEne = minim.loadFile("cancel6.mp3");
 
   title=loadImage("titlelogo2.png");
-  start=loadImage("startButton.png");
+  start=loadImage("startButton2.png");
   play=loadImage("playButtonBig.png");
   make=loadImage("makeButtonBig.png");
   battle=loadImage("battle1.png");
@@ -117,10 +117,9 @@ void draw() {
   case 1:
     //モード選択画面
     image(back[0], 0, 0, width, height);
-    image(play, 16*2*n, 16*5*n, 48*n, 32*n);
-    image(battle, 16*7*n, 16*5*n, 16*6*n, 32*n);
-    image(make, 16*15*n, 16*5*n, 48*n, 32*n);
-    //image(returnButton, 0, 0, 48*n, 16*n);
+    image(play, 16*2*n, 16*4*n, 48*n, 32*n);
+    image(battle, 16*7*n, 16*4*n, 16*6*n, 32*n);
+    image(make, 16*15*n, 16*4*n, 48*n, 32*n);
     image(returnButton, width/2-64*n/2, 16*8*n, 64*n, 16*n);
     break;
 
@@ -675,7 +674,6 @@ void draw() {
     image(pointB, 13*16*n, 6*16*n, 16*n, 16*n);
     drawPoints(14*16*n, 6*16*n, boardPoint, 4);
     image(returnButton, width/2-64*n/2, 16*8*n, 64*n, 16*n);
-    //image(returnButton, 0, 0, 48*n, 16*n);
     break;
   }
 }
@@ -746,7 +744,7 @@ void mousePressed() {
     break;
 
   case 1:
-    if (mouseY>=16*5*n && mouseY<=16*7*n) {
+    if (mouseY>=16*4*n && mouseY<=16*6*n) {
       if (mouseX>=16*2*n && mouseX<=16*5*n) {
         button.rewind();
         button.play();
@@ -761,7 +759,7 @@ void mousePressed() {
         startTime = millis()/1000;
         page=4;
       }
-    } else if (mouseY<=16*n && mouseX<=48*n) {
+    } else if (mouseX>=16*8*n && mouseX<=16*12*n && mouseY>=16*8*n && mouseY<=16*9*n) {
       button.rewind();
       button.play();
       page=0;
@@ -787,7 +785,7 @@ void mousePressed() {
     break;
 
   case 5:
-    if (mouseY<=16*n && mouseX<=48*n) {
+    if (mouseX>=16*8*n && mouseX<=16*12*n && mouseY>=16*8*n && mouseY<=16*9*n) {
       button.rewind();
       button.play();
       initialize();
