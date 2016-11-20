@@ -23,7 +23,7 @@ PImage title, start, play, make, battle, returnButton;  //タイトルと各種�
 Block block;
 
 //あそぶモード用変数
-PImage goal;  //ゴールの旗
+PImage goal, stageClear;  //ゴールの旗、クリア文字
 int eneNumber;  //敵出現タイミング・数管理
 Player player;
 ArrayList<Item> items;
@@ -69,7 +69,7 @@ void setup() {
   button = minim.loadFile("decision3.mp3");
   hitEne = minim.loadFile("cancel6.mp3");
 
-  title=loadImage("titlelogo2.png");
+  title=loadImage("title.png");
   start=loadImage("startButton2.png");
   play=loadImage("playButtonBig.png");
   make=loadImage("makeButtonBig.png");
@@ -80,6 +80,7 @@ void setup() {
     back[i]=back[0];
   }
   goal=loadImage("flag2.png");
+  stageClear=loadImage("stageClear.png");
   PImage num = loadImage("numbers_line.png");
   for (int i=0; i<10; i++) {
     numbers[i] = num.get(8*i, 0, 8, 16);
@@ -110,7 +111,7 @@ void draw() {
   case 0:
     //スタート画面
     image(back[0], 0, 0, width, height);
-    image(title, width/2-192*n/2, 16*4*n, 192*n, 24*n);
+    image(title, width/2-title.width*n/2, 16*3*n, title.width*n, title.height*n);
     image(start, width/2-64*n/2, 16*7*n, 64*n, 16*n);
     break;
 
@@ -126,6 +127,12 @@ void draw() {
   case 2:
     //あそぶモード
 
+
+    //キャラの動きに合わせてスクロール
+    if (player.posX>-backX+500 && player.right && backX>-width*(m-1)-48*n ) {
+      backX-=player.speedX*n;
+    }
+
     //背景描画
     for (int i=0; i<back.length; i++) {
       image(back[i], backX+width*i, 0, width, height);
@@ -135,11 +142,6 @@ void draw() {
     if (!bgm.isPlaying()&&player.alive) {
       bgm.rewind();
       bgm.play();
-    }
-
-    //キャラの動きに合わせてスクロール
-    if (player.posX>-backX+500 && player.right && backX>-width*(m-1)-48*n ) {
-      backX-=4;
     }
 
     pushMatrix();
@@ -244,6 +246,7 @@ void draw() {
         itemGet.rewind();
         itemGet.play();
         items.remove(i);
+        playerPoint+=5;
         break;
       }
     }
@@ -266,6 +269,7 @@ void draw() {
           e.time=0;
           crush.rewind();
           crush.play();
+          playerPoint+=5;
         } else {
           //ゲームオーバー
           gameover.rewind();
@@ -303,6 +307,15 @@ void draw() {
     }
 
     popMatrix();
+
+    //ポイント表示
+    image(pointP, 16*n, 11*16*n, 16*n, 16*n);
+    drawPoints(2*16*n, 11*16*n, playerPoint, 4);
+
+    //クリア表示
+    if (player.finish) {
+      image(stageClear, width/2-(stageClear.width/2)*n, 4*16*n, stageClear.width*n, stageClear.height*n);
+    }
 
     /*
     ゲームオーバーから3秒くらいしたら
