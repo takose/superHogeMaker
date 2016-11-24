@@ -584,7 +584,7 @@ void draw() {
           player.right=false;
           player.left=false;
           player.jumping=false;
-          playerPoint-=pointValue*5/3;
+          playerPoint-=int(pointValue*3/5);
         }
       }
       if (!e.alive && e.time>4) {
@@ -665,7 +665,7 @@ void draw() {
 
     //残り時間
     remainTime = 30-(millis()/1000-startTime);
-    /*if (remainTime<0) {
+    if (remainTime<0) {
      remainTime = 0;
      player.time = 0;
      player.finish = true;
@@ -673,7 +673,7 @@ void draw() {
      fin.play();
      stop();
      page = 5;
-     }*/
+     }
     drawPoints(18*16*n, 0, remainTime, 2);
     image(clock, 17*16*n, 0, 16*n, 16*n);
 
