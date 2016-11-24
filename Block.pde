@@ -131,7 +131,7 @@ class Block {
       }
     }
     catch(Exception e) {
-      println(e);
+      //println(e);
     }
   }
 
@@ -157,7 +157,7 @@ class Block {
       }
     }
     catch(Exception e) {
-      println(e);
+      //println(e);
     }
   }
 

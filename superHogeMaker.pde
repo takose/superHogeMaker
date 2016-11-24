@@ -105,6 +105,7 @@ void setup() {
 
 
 void draw() {
+  println(frameRate);
 
   switch(page) {
 
@@ -246,7 +247,7 @@ void draw() {
         itemGet.rewind();
         itemGet.play();
         items.remove(i);
-        playerPoint+=5;
+        playerPoint+=10;
         break;
       }
     }
@@ -269,7 +270,7 @@ void draw() {
           e.time=0;
           crush.rewind();
           crush.play();
-          playerPoint+=5;
+          playerPoint+=15;
         } else {
           //ゲームオーバー
           gameover.rewind();
@@ -362,7 +363,7 @@ void draw() {
     if (Serial.list().length>0) {
       if (serial.available()>0 && !move) {
         String str = serial.readStringUntil('e');
-        println(str);
+        //println(str);
         block.getSerialData_(str);
         serial.write('a');
       } else {
@@ -409,7 +410,7 @@ void draw() {
     if (Serial.list().length>0) {
       if (serial.available()>0 && !move) {
         String str = serial.readStringUntil('e');
-        println(str);
+        //println(str);
         block2.getSerialData_battle(str);
         serial.write('a');
 
@@ -507,7 +508,7 @@ void draw() {
         itemGet.rewind();
         itemGet.play();
         items.remove(i);
-        playerPoint+=3;
+        playerPoint+=10;
         break;
       }
     }
@@ -536,7 +537,7 @@ void draw() {
 
       //出現場所（高さ）
       int eneY=(int)random(-5, 5);
-      println("pos="+eneY);
+      //println("pos="+eneY);
 
       if (eneY<=0) {
         //空から
@@ -572,7 +573,7 @@ void draw() {
           e.time=0;
           crush.rewind();
           crush.play();
-          playerPoint+=3;
+          playerPoint+=15;
         } else {
           //キャラ死亡、一時操作ストップ
           hitEne.rewind();
@@ -582,7 +583,7 @@ void draw() {
           player.right=false;
           player.left=false;
           player.jumping=false;
-          playerPoint-=10;
+          playerPoint-=25;
         }
       }
       if (!e.alive && e.time>4) {
@@ -635,19 +636,17 @@ void draw() {
         }
       }
     }
-    /*if(!str.equals(oldstr)){
-     comp++;
-     }*/
 
-    println("comp:" + comp);
-    if (frameCount%60==0) {
-      if (boardCount<=5) {
-        boardPoint--;
-      } else if (boardCount>=5 && comp>3) {
-        boardPoint++;
-        comp = 0;
-      }
+    //println("comp:" + comp);
+    if (frameCount%60==0 && boardCount<=5) {
+      //5個以下なら2秒ごとにポイント減
+      boardPoint-=10;
     } 
+    if (boardCount>=5 && comp>3) {
+      //一定以上配置を変更したらポイント増
+      boardPoint+=15;
+      comp = 0;
+    }
 
     if (playerPoint<0) {
       playerPoint=0;
@@ -665,7 +664,7 @@ void draw() {
 
     //残り時間
     remainTime = 30-(millis()/1000-startTime);
-    if (remainTime<0) {
+    /*if (remainTime<0) {
       remainTime = 0;
       player.time = 0;
       player.finish = true;
@@ -673,7 +672,7 @@ void draw() {
       fin.play();
       stop();
       page = 5;
-    }
+    }*/
     drawPoints(18*16*n, 0, remainTime, 2);
     image(clock, 17*16*n, 0, 16*n, 16*n);
 
