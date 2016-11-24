@@ -59,7 +59,7 @@ class Block {
     int []chara=squares(_x, _y);
     int x=chara[0];
     int y=chara[1];
-    if (x>=brick.length) {
+    if (x>=brick.length || x<0) {
       return false;
     }
     if (y==-1||y==6) {
@@ -77,7 +77,7 @@ class Block {
     int []chara=squares(_x, _y);
     int x=chara[0];
     int y=chara[1];
-    if (x>=brick.length) {
+    if (x>=brick.length || x<0) {
       return false;
     }
     if (y==-1||y==6) {
