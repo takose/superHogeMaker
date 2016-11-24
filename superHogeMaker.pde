@@ -300,8 +300,18 @@ void draw() {
     for (Enemy e : enemy) {
       int eneFloor=block.isFloor(e.posX+12*n, e.posY);
       e.move(eneFloor);
+      if (e.isFacingRight && block.isRight(e.posX+16*n, e.posY+14*n)) {
+        e.isFacingRight = false;
+      } else
+        if (!e.isFacingRight && block.isLeft(e.posX, e.posY+14*n)) {
+          e.isFacingRight = true;
+        }
       if (e.touch && e.alive) {
-        e.moveLeft();
+        if (e.isFacingRight) {
+          e.moveRight();
+        } else {
+          e.moveLeft();
+        }
       }
       e.draw();
     }
@@ -600,6 +610,11 @@ void draw() {
         eneFloor=block2.isFloor(e.posX+12*n, e.posY);
       }
       e.move(eneFloor);
+      if (block2.isRight(e.posX+16*n, e.posY+14*n)) {
+        e.isFacingRight = false;
+      } else if (block2.isLeft(e.posX*n, e.posY+14*n)) {
+        e.isFacingRight = true;
+      }
       if (e.touch && e.alive) {
         if (e.isFacingRight) {
           e.moveRight();
