@@ -35,7 +35,7 @@ boolean move;  //画面表示の移動フラグ
 
 //対戦モード用変数
 Block block2;  //対戦用のブロック配列
-int boardPoint, boardCount, comp, playerPoint;  //それぞれのポイント
+int boardPoint, boardCount, comp, playerPoint, pointValue;  //それぞれのポイント
 PImage [] numbers = new PImage[10];  //数字
 PImage clock, pointP, pointB, win_b, win_p, tie;  //アイコン、勝敗
 int startTime, remainTime;
@@ -99,6 +99,7 @@ void setup() {
   broken=new ArrayList<int[]>();
 
   block2 = new Block(1, n);
+  pointValue = 15;
 
   initialize();
 }
@@ -247,7 +248,7 @@ void draw() {
         itemGet.rewind();
         itemGet.play();
         items.remove(i);
-        playerPoint+=10;
+        playerPoint+=pointValue;
         break;
       }
     }
@@ -270,7 +271,7 @@ void draw() {
           e.time=0;
           crush.rewind();
           crush.play();
-          playerPoint+=15;
+          playerPoint+=pointValue;
         } else {
           //ゲームオーバー
           gameover.rewind();
@@ -508,7 +509,7 @@ void draw() {
         itemGet.rewind();
         itemGet.play();
         items.remove(i);
-        playerPoint+=10;
+        playerPoint+=pointValue;
         break;
       }
     }
@@ -573,7 +574,7 @@ void draw() {
           e.time=0;
           crush.rewind();
           crush.play();
-          playerPoint+=15;
+          playerPoint+=pointValue;
         } else {
           //キャラ死亡、一時操作ストップ
           hitEne.rewind();
@@ -583,7 +584,7 @@ void draw() {
           player.right=false;
           player.left=false;
           player.jumping=false;
-          playerPoint-=25;
+          playerPoint-=pointValue*5/3;
         }
       }
       if (!e.alive && e.time>4) {
@@ -640,11 +641,11 @@ void draw() {
     //println("comp:" + comp);
     if (frameCount%60==0 && boardCount<=5) {
       //5個以下なら2秒ごとにポイント減
-      boardPoint-=10;
+      boardPoint-=pointValue;
     } 
     if (boardCount>=5 && comp>3) {
       //一定以上配置を変更したらポイント増
-      boardPoint+=15;
+      boardPoint+=pointValue;
       comp = 0;
     }
 
@@ -665,14 +666,14 @@ void draw() {
     //残り時間
     remainTime = 30-(millis()/1000-startTime);
     /*if (remainTime<0) {
-      remainTime = 0;
-      player.time = 0;
-      player.finish = true;
-      fin.rewind();
-      fin.play();
-      stop();
-      page = 5;
-    }*/
+     remainTime = 0;
+     player.time = 0;
+     player.finish = true;
+     fin.rewind();
+     fin.play();
+     stop();
+     page = 5;
+     }*/
     drawPoints(18*16*n, 0, remainTime, 2);
     image(clock, 17*16*n, 0, 16*n, 16*n);
 
