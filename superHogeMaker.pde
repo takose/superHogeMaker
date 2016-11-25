@@ -449,10 +449,13 @@ void draw() {
     //キャラ
 
     if (frameCount%3==0) {
-      //キャラ・敵の落下用にtimeを増やす
+      //キャラ・敵・アイテムの落下用にtimeを増やす
       player.time++;
       for (Enemy e : enemy) {
         e.time++;
+      }
+      for (Item i : items) {
+        i.time++;
       }
     }
 
@@ -520,6 +523,9 @@ void draw() {
      一瞬描画されなくなる。なのでfor文を分ける。
      */
     for (Item i : items) {
+      int itemFloor = block2.isFloor(i.posX+8*n, i.posY+8*n);
+      i.move(itemFloor);
+
       i.display();
     }
 
@@ -538,7 +544,6 @@ void draw() {
 
       //出現場所（高さ）
       int eneY=(int)random(-5, 5);
-      //println("pos="+eneY);
 
       if (eneY<=0) {
         //空から
@@ -666,14 +671,14 @@ void draw() {
     //残り時間
     remainTime = 30-(millis()/1000-startTime);
     if (remainTime<0) {
-     remainTime = 0;
-     player.time = 0;
-     player.finish = true;
-     fin.rewind();
-     fin.play();
-     stop();
-     page = 5;
-     }
+      remainTime = 0;
+      player.time = 0;
+      player.finish = true;
+      fin.rewind();
+      fin.play();
+      stop();
+      page = 5;
+    }
     drawPoints(18*16*n, 0, remainTime, 2);
     image(clock, 17*16*n, 0, 16*n, 16*n);
 
