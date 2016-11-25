@@ -1,13 +1,16 @@
 class Item {
   int posX, posY;
   PImage img;
-  int n, kind;
+  int n, kind, time;
+  boolean touch;
 
   Item(int x, int y, int num, int _kind) {
     n=num;
     posX=x*16*n;
     posY=y*16*n+32*n;
     kind = _kind;
+    time = 0;
+    touch = true;
     switch(kind) {
     case 0:
       img=loadImage("stone.png");
@@ -31,5 +34,23 @@ class Item {
       return true;
     }
     return false;
+  }
+
+  void move(int floor) {
+    println("posY "+posY);
+    println("floor "+floor);
+    if (posY<floor) {
+      if (touch) {
+        time = 0;
+        touch = false;
+      }
+      posY+=n*9.8*time/10;
+      if (posY>floor) {
+        posY = floor;
+        time = 0;
+      }
+    } else {
+      touch = true;
+    }
   }
 }
