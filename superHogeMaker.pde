@@ -425,6 +425,8 @@ void draw() {
       }
     }
 
+    block2.countDown();
+
     for (int[] b : broken) {
       /*
       壊れたブロック消滅の時間を計る。
