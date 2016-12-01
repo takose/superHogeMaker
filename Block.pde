@@ -1,6 +1,7 @@
 class Block {
   PImage [] blocks=new PImage[4];
   int [][] brick;
+  int [][] brickCount;  //出現までの時間を計る
   int n;  //拡大倍率
   int area;
   Block(int m, int num) {
@@ -13,7 +14,15 @@ class Block {
     blocks[3]=loadImage("broken.png");
     n=num;
     brick = new int[20*m][6];
+    brickCount = new int[20*m][6];
     area=0;
+
+    for (int i=0; i<brickCount.length; i++) {
+      for (int j=0; j<6; j++) {
+        brick[i][j] = 0;
+        brickCount[i][j] = 0;
+      }
+    }
   }
 
 
@@ -30,7 +39,7 @@ class Block {
       y=-1;
     }
     for (int i=y; i<5; i++) {
-      if (brick[x][i+1]>=1) {
+      if (brick[x][i+1]>=1 && brickCount[x][i+1]==0) {
         int tmp=(i+3)*16*n;
         return tmp;
       }
@@ -51,6 +60,9 @@ class Block {
     if (y==-1||y==6) {
       return 0;
     } else {
+      if (brickCount[x][y]>0) {
+        return 0;
+      }
       return brick[x][y];
     }
   }
@@ -65,7 +77,7 @@ class Block {
     if (y==-1||y==6) {
       return false;
     } else {
-      if (brick[x][y]==0) {
+      if (brick[x][y]==0 || brickCount[x][y]>0) {
         return false;
       } else {
         return true;
@@ -83,7 +95,7 @@ class Block {
     if (y==-1||y==6) {
       return false;
     } else {
-      if (brick[x][y]==0) {
+      if (brick[x][y]==0 || brickCount[x][y]>0) {
         return false;
       } else {
         return true;
@@ -148,6 +160,7 @@ class Block {
         for (int i=0; i<data.length; i++) {
           if (brick[int(j+10*0.5)][i]<=0 || data[i]<=0) {
             brick[int(j+10*0.5)][i] = data[i];
+            brickCount[int(j+10*0.5)][i] = 30;
             int k = (int)random(3);
             if (k==0 && data[i]==1) {
               brick[int(j+10*0.5)][i] = 2;
@@ -158,6 +171,22 @@ class Block {
     }
     catch(Exception e) {
       //println(e);
+    }
+  }
+
+  //出現までのカウントダウン用
+  void countDown() {
+    for (int i=0; i<brickCount.length; i++) {
+      for (int j=0; j<6; j++) {
+        if (brick[i][j]==0) {
+          brickCount[i][j] = 30;
+        } else {
+          brickCount[i][j]--;
+          if (brickCount[i][j]<0) {
+            brickCount[i][j] = 0;
+          }
+        }
+      }
     }
   }
 
@@ -197,8 +226,12 @@ class Block {
     //描画
     for (int i=0; i<brick.length; i++) {
       for (int j=0; j<6; j++) {
-        if (brick[i][j]>0) {
+        if (brick[i][j]>0 && brickCount[i][j]==0) {
           image(blocks[brick[i][j]-1], i*16*n, (j+3)*16*n, 16*n, 16*n);
+        } else if (brick[i][j]>0 && brickCount[i][j]>0) {
+          tint(255, 150);
+          image(blocks[brick[i][j]-1], i*16*n, (j+3)*16*n, 16*n, 16*n);
+          noTint();
         }
       }
     }
