@@ -16,6 +16,13 @@ class Block {
     brick = new int[20*m][6];
     brickCount = new int[20*m][6];
     area=0;
+
+    for (int i=0; i<brickCount.length; i++) {
+      for (int j=0; j<6; j++) {
+        brick[i][j] = 0;
+        brickCount[i][j] = 0;
+      }
+    }
   }
 
 
@@ -168,9 +175,13 @@ class Block {
   void countDown() {
     for (int i=0; i<brickCount.length; i++) {
       for (int j=0; j<6; j++) {
-        brickCount[i][j]--;
-        if (brickCount[i][j]<0) {
-          brickCount[i][j] = 0;
+        if (brick[i][j]==0) {
+          brickCount[i][j] = 30;
+        } else {
+          brickCount[i][j]--;
+          if (brickCount[i][j]<0) {
+            brickCount[i][j] = 0;
+          }
         }
       }
     }
