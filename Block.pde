@@ -39,7 +39,7 @@ class Block {
       y=-1;
     }
     for (int i=y; i<5; i++) {
-      if (brick[x][i+1]>=1) {
+      if (brick[x][i+1]>=1 && brickCount[x][i+1]==0) {
         int tmp=(i+3)*16*n;
         return tmp;
       }
@@ -60,6 +60,9 @@ class Block {
     if (y==-1||y==6) {
       return 0;
     } else {
+      if (brickCount[x][y]>0) {
+        return 0;
+      }
       return brick[x][y];
     }
   }
@@ -74,7 +77,7 @@ class Block {
     if (y==-1||y==6) {
       return false;
     } else {
-      if (brick[x][y]==0) {
+      if (brick[x][y]==0 || brickCount[x][y]>0) {
         return false;
       } else {
         return true;
@@ -92,7 +95,7 @@ class Block {
     if (y==-1||y==6) {
       return false;
     } else {
-      if (brick[x][y]==0) {
+      if (brick[x][y]==0 || brickCount[x][y]>0) {
         return false;
       } else {
         return true;
