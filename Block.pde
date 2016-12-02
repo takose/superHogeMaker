@@ -161,8 +161,8 @@ class Block {
           if (brick[int(j+10*0.5)][i]<=0 || data[i]<=0) {
             brick[int(j+10*0.5)][i] = data[i];
             brickCount[int(j+10*0.5)][i] = 30;
-            int k = (int)random(3);
-            if (k==0 && data[i]==1) {
+            int k = (int)random(5);
+            if (k<=1 && data[i]==1) {
               brick[int(j+10*0.5)][i] = 2;
             }
           }

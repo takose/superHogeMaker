@@ -38,11 +38,11 @@ Block block2;  //対戦用のブロック配列
 int boardPoint, boardCount, comp, playerPoint, pointValueB, pointValueP;  //それぞれのポイント
 PImage [] numbers = new PImage[10];  //数字
 PImage clock, pointP, pointB, win_b, win_p, tie;  //アイコン、勝敗
-int startTime, remainTime;
+int startTime, remainTime, timeLimit;
 String oldstr;
 
 void settings() {
-  if (displayHeight*20/12 < displayWidth){
+  if (displayHeight*20/12 < displayWidth) {
     n = displayHeight / (16 * 12);
   } else {
     n = displayWidth / (16 * 20);
@@ -104,7 +104,7 @@ void setup() {
 
   block2 = new Block(1, n);
   pointValueB = 15;
-  pointValueP = 40;
+  pointValueP = 25;
 
   initialize();
 }
@@ -410,6 +410,11 @@ void draw() {
     //背景描画
     image(back[0], 0, 0, width, height);
 
+    strokeWeight(n);
+    stroke(77, 69, 64, 120);
+    noFill();
+    rect(5*16*n, 3*16*n, 10*16*n, 6*16*n);
+
     //ブロック
 
     //ブロックの情報取得
@@ -458,6 +463,7 @@ void draw() {
     if (frameCount%3==0) {
       //キャラ・敵・アイテムの落下用にtimeを増やす
       player.time++;
+      player.killTime++;
       for (Enemy e : enemy) {
         e.time++;
       }
@@ -502,6 +508,7 @@ void draw() {
           chara[0], chara[1], 0
           }
           );
+        boardPoint-=int(pointValueB*3/5);
       }
     }
 
@@ -579,15 +586,15 @@ void draw() {
     for (Enemy e : enemy) {
 
       //キャラとの当たり判定
-      if (dist(e.posX+(16*n)/2, e.posY+(16*n)/2, player.posX+(16*n)/2, player.posY+(16*n)/2)<=16*n && e.alive && player.alive) {
-        if (player.posY<e.posY && player.alive && e.touch) {
+      if (dist(e.posX+(16*n)/2, e.posY+(16*n)/2, player.posX+(16*n)/2, player.posY+(12*n)/2)<=16*n && e.alive && player.alive && player.killTime>11) {
+        if (player.posY+(6*n)<e.posY && player.alive && e.touch) {
           //キャラのほうが上にいるなら敵消滅
           e.alive=false;
           e.time=0;
           crush.rewind();
           crush.play();
           playerPoint+=pointValueP;
-        } else if(e.time>11) {
+        } else {
           //キャラ死亡、一時操作ストップ
           hitEne.rewind();
           hitEne.play();
@@ -597,7 +604,8 @@ void draw() {
           player.left=false;
           player.jumping=false;
           playerPoint-=int(pointValueP*3/5);
-          e.time=0;
+          //boardPoint+=pointValueB*1/5;
+          player.killTime = 0;
         }
       }
       if (!e.alive && e.time>4) {
@@ -677,7 +685,7 @@ void draw() {
     drawPoints(17*16*n, 11*16*n, boardPoint, 4);
 
     //残り時間
-    remainTime = 30-(millis()/1000-startTime);
+    remainTime = timeLimit-(millis()/1000-startTime);
     if (remainTime<0) {
       remainTime = 0;
       player.time = 0;
@@ -769,6 +777,12 @@ void keyReleased() {
     initialize();
   } else if (key == 's') {
     save(  "screenshot/" + frameCount+".png" );
+  } else if(key == 'm'){
+    button.rewind();
+    button.play();
+    startTime = millis()/1000;
+    timeLimit=100;
+    page=4;
   }
 }
 
@@ -798,6 +812,7 @@ void mousePressed() {
         button.rewind();
         button.play();
         startTime = millis()/1000;
+        timeLimit = 30;
         page=4;
       }
     } else if (mouseX>=16*8*n && mouseX<=16*12*n && mouseY>=16*8*n && mouseY<=16*9*n) {
@@ -862,7 +877,6 @@ void initialize() {
   block2.area = 0;
   setBrick();  //こうぼうせんブロック初期配置
   startTime = 0;
-  remainTime = 30;
   playerPoint = 0;
   boardPoint = 0;
 }
@@ -930,12 +944,12 @@ void setBrick() {
   for (int[] b : initPos) {
     block2.brick[b[0]][b[1]] = 1;
   }
-  for (int i=0; i<5; i++) {
+  /*for (int i=0; i<5; i++) {
     int k = (int)random(initPos.size());
     int[] b = initPos.get(k);
     block2.brick[b[0]][b[1]] = 2;
     initPos.remove(k);
-  }
+  }*/
 }
 
 void drawPoints(int x, int y, int point, int digit) {

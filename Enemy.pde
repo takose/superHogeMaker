@@ -1,5 +1,5 @@
 class Enemy extends Player {
-  int kind;
+  int kind, killTime;
   PImage [] eneL = new PImage[4];
   PImage [] eneR = new PImage[4];
 

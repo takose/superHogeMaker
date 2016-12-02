@@ -1,5 +1,5 @@
 class Player {
-  int time, posX, posY, speedX, speedY;
+  int time, posX, posY, speedX, speedY, killTime;
   PImage [] walkR=new PImage[6];  //歩き右向き
   PImage [] walkL=new PImage[6];  //歩き左向き
   PImage [] jumpR=new PImage[2];  //ジャンプ右向き
