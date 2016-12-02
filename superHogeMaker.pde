@@ -20,6 +20,7 @@ int page;  //どの画面にいるか
 int backX;  //背景X座標
 PImage [] back=new PImage[m];  //背景
 PImage title, start, play, make, battle, returnButton;  //タイトルと各種ボタン
+PImage howto;
 Block block;
 
 //あそぶモード用変数
@@ -84,6 +85,7 @@ void setup() {
   for (int i=0; i<back.length; i++) {
     back[i]=back[0];
   }
+  howto = loadImage("howtoplay.png");
   goal=loadImage("flag2.png");
   stageClear=loadImage("stageClear.png");
   PImage num = loadImage("numbers_line.png");
@@ -670,8 +672,8 @@ void draw() {
       boardPoint+=pointValueB;
       comp = 0;
     }
-    
-    if(oldBoardCount<boardCount){
+
+    if (oldBoardCount<boardCount) {
       addBlock.rewind();
       addBlock.play();
     }
@@ -731,6 +733,14 @@ void draw() {
     drawPoints(14*16*n, 6*16*n, boardPoint, 4);
     image(returnButton, width/2-64*n/2, 16*8*n, 64*n, 16*n);
     break;
+
+  case 6:
+    image(howto, 0, 0, width, height);
+    break;
+
+  case 7:
+    image(howto, 0, 0, width, height);
+    break;
   }
 }
 
@@ -778,13 +788,25 @@ void keyReleased() {
     if (keyCode==LEFT) {
       player.left=false;
     }
+  } else if (page==1) {
+    if (key == 'h') {
+      page=6;
+    }
+  } else if (page==6) {
+    if (keyCode == RIGHT) {
+      page=7;
+    }
+  } else if (page==7) {
+    if (keyCode == LEFT) {
+      page=6;
+    }
   }
   if (key == 'b') {
     stop();
     initialize();
   } else if (key == 's') {
     save(  "screenshot/" + frameCount+".png" );
-  } else if(key == 'm'){
+  } else if (key == 'm') {
     button.rewind();
     button.play();
     startTime = millis()/1000;
@@ -953,11 +975,11 @@ void setBrick() {
     block2.brick[b[0]][b[1]] = 1;
   }
   /*for (int i=0; i<5; i++) {
-    int k = (int)random(initPos.size());
-    int[] b = initPos.get(k);
-    block2.brick[b[0]][b[1]] = 2;
-    initPos.remove(k);
-  }*/
+   int k = (int)random(initPos.size());
+   int[] b = initPos.get(k);
+   block2.brick[b[0]][b[1]] = 2;
+   initPos.remove(k);
+   }*/
 }
 
 void drawPoints(int x, int y, int point, int digit) {
