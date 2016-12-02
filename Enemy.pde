@@ -6,6 +6,7 @@ class Enemy extends Player {
   Enemy(int ex, int ey, int num, int _kind) {
     super(ex, ey, num);
     kind = _kind;
+    speedX = 1;
     if (kind==0) {
       PImage _eneL = loadImage("walkEneL.png");
       PImage _eneR = loadImage("walkEneR.png");

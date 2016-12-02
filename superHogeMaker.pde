@@ -578,7 +578,7 @@ void draw() {
     for (Enemy e : enemy) {
 
       //キャラとの当たり判定
-      if (dist(e.posX, e.posY, player.posX, player.posY)<=12*n && e.alive && player.alive) {
+      if (dist(e.posX+(16*n)/2, e.posY+(16*n)/2, player.posX+(16*n)/2, player.posY+(16*n)/2)<=16*n && e.alive && player.alive) {
         if (player.posY<e.posY && player.alive && e.touch) {
           //キャラのほうが上にいるなら敵消滅
           e.alive=false;
@@ -596,6 +596,7 @@ void draw() {
           player.left=false;
           player.jumping=false;
           playerPoint-=int(pointValue*3/5);
+          boardPoint++;
         }
       }
       if (!e.alive && e.time>4) {
@@ -625,7 +626,7 @@ void draw() {
       e.move(eneFloor);
       if (block2.isRight(e.posX+16*n, e.posY+14*n)) {
         e.isFacingRight = false;
-      } else if (block2.isLeft(e.posX*n, e.posY+14*n)) {
+      } else if (block2.isLeft(e.posX, e.posY+14*n)) {
         e.isFacingRight = true;
       }
       if (e.touch && e.alive) {
@@ -689,7 +690,7 @@ void draw() {
     image(clock, 17*16*n, 0, 16*n, 16*n);
 
     //敵に当たって少し経ったら生き返る
-    if (!player.alive && player.time>=10) {
+    if (!player.alive && player.time>=5) {
       player.alive = true;
     }
 
