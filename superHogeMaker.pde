@@ -11,7 +11,7 @@ Serial serial;
 Minim minim;
 
 AudioPlayer bgm;
-AudioPlayer jumpSound, fin, brokenSound, itemSound, itemGet, gameover, crush, button, hitEne;
+AudioPlayer jumpSound, fin, brokenSound, itemSound, itemGet, gameover, crush, button, hitEne, addBlock;
 
 //モード共通で使う変数
 int n;  //拡大倍率
@@ -35,7 +35,7 @@ boolean move;  //画面表示の移動フラグ
 
 //対戦モード用変数
 Block block2;  //対戦用のブロック配列
-int boardPoint, boardCount, comp, playerPoint, pointValueB, pointValueP;  //それぞれのポイント
+int boardPoint, boardCount, oldBoardCount, comp, playerPoint, pointValueB, pointValueP;  //それぞれのポイント
 PImage [] numbers = new PImage[10];  //数字
 PImage clock, pointP, pointB, win_b, win_p, tie;  //アイコン、勝敗
 int startTime, remainTime, timeLimit;
@@ -72,6 +72,7 @@ void setup() {
   crush = minim.loadFile("crushed.mp3");
   button = minim.loadFile("decision3.mp3");
   hitEne = minim.loadFile("cancel6.mp3");
+  addBlock = minim.loadFile("button40.mp3");
 
   title=loadImage("title.png");
   start=loadImage("startButton2.png");
@@ -669,6 +670,12 @@ void draw() {
       boardPoint+=pointValueB;
       comp = 0;
     }
+    
+    if(oldBoardCount<boardCount){
+      addBlock.rewind();
+      addBlock.play();
+    }
+    oldBoardCount = boardCount;
 
     if (playerPoint<0) {
       playerPoint=0;
@@ -879,6 +886,7 @@ void initialize() {
   startTime = 0;
   playerPoint = 0;
   boardPoint = 0;
+  oldBoardCount = 0;
 }
 
 void stop() {
