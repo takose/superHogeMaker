@@ -182,8 +182,11 @@ class Block {
           brickCount[i][j] = 30;
         } else {
           brickCount[i][j]--;
-          if (brickCount[i][j]<0) {
+          if (brickCount[i][j]<0 && brick[i][j]!=2) {
             brickCount[i][j] = 0;
+          } else if(brickCount < -90){ // take about 3sec until board gain the item
+            brick[i][j] = 1;
+            brickCount[i][j] = 30;
           }
         }
       }
