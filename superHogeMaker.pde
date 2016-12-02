@@ -42,7 +42,11 @@ int startTime, remainTime;
 String oldstr;
 
 void settings() {
-  n = displayHeight / (16 * 12);
+  if (displayHeight*20/12 < displayWidth){
+    n = displayHeight / (16 * 12);
+  } else {
+    n = displayWidth / (16 * 20);
+  }
   size(320*n, 192*n);
   noSmooth();  //ぼかさない処理
 }
