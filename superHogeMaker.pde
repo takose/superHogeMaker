@@ -587,7 +587,7 @@ void draw() {
           crush.rewind();
           crush.play();
           playerPoint+=pointValueP;
-        } else {
+        } else if(e.time>11) {
           //キャラ死亡、一時操作ストップ
           hitEne.rewind();
           hitEne.play();
@@ -597,6 +597,7 @@ void draw() {
           player.left=false;
           player.jumping=false;
           playerPoint-=int(pointValueP*3/5);
+          e.time=0;
         }
       }
       if (!e.alive && e.time>4) {
