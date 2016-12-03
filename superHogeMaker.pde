@@ -11,7 +11,7 @@ Serial serial;
 Minim minim;
 
 AudioPlayer bgm;
-AudioPlayer jumpSound, fin, brokenSound, itemSound, itemGet, gameover, crush, button, hitEne, addBlock;
+AudioPlayer jumpSound, fin, brokenSound, itemSound, itemGet, gameover, crush, button, hitEne, addBlock, vanishBlock;
 
 //モード共通で使う変数
 int n;  //拡大倍率
@@ -75,6 +75,7 @@ void setup() {
   button = minim.loadFile("decision3.mp3");
   hitEne = minim.loadFile("cancel6.mp3");
   addBlock = minim.loadFile("button40.mp3");
+  vanishBlock = minim.loadFile("menu2.mp3");
 
   title=loadImage("title.png");
   start=loadImage("startButton2.png");
@@ -441,6 +442,19 @@ void draw() {
     }
 
     block2.countDown();
+    for(int i=0; i<block2.brick.length; i++){
+     for(int j=0; j<6; j++){
+       if (block2.brickCount[i][j]<0 && block2.brick[i][j]!=2) {
+          block2.brickCount[i][j] = 0;
+        } else if(block2.brickCount[i][j] < -90){ // take about 3sec until board gain the item
+          block2.brick[i][j] = 1;
+          block2.brickCount[i][j] = 30;
+          boardPoint+=pointValueB;
+          vanishBlock.rewind();
+          vanishBlock.play();
+        }
+      }
+    }
 
     for (int[] b : broken) {
       /*
@@ -513,7 +527,6 @@ void draw() {
           chara[0], chara[1], 0
           }
           );
-        boardPoint-=int(pointValueB*3/5);
       }
     }
 
@@ -655,14 +668,14 @@ void draw() {
 
     //ポイント
     //ボード側点数カウント
-    //boardCount=0;
-    //for (int i=5; i<15; i++) {
-    //  for (int j=0; j<6; j++) {
-    //    if (block2.brick[i][j]>0) {
-    //      boardCount++;
-    //    }
-    //  }
-    //}
+    boardCount=0;
+    for (int i=5; i<15; i++) {
+      for (int j=0; j<6; j++) {
+        if (block2.brick[i][j]>0) {
+          boardCount++;
+        }
+      }
+    }
 
     //println("comp:" + comp);
     if (frameCount%60==0 && boardCount<=5) {
