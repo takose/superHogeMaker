@@ -20,7 +20,7 @@ class Player {
     posX=x;
     posY=y;
     speedX=2;
-    speedY=7;
+    speedY=9;
     time=0;
     isFacingRight=true;
 
