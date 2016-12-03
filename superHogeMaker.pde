@@ -20,7 +20,7 @@ int page;  //どの画面にいるか
 int backX;  //背景X座標
 PImage [] back=new PImage[m];  //背景
 PImage title, start, play, make, battle, returnButton;  //タイトルと各種ボタン
-PImage howto;
+PImage howto1, howto2;
 Block block;
 
 //あそぶモード用変数
@@ -85,7 +85,8 @@ void setup() {
   for (int i=0; i<back.length; i++) {
     back[i]=back[0];
   }
-  howto = loadImage("howtoplay.png");
+  howto1 = loadImage("howtoplay.png");
+  howto2 = loadImage("howtoplay2.png");
   goal=loadImage("flag2.png");
   stageClear=loadImage("stageClear.png");
   PImage num = loadImage("numbers_line.png");
@@ -735,11 +736,11 @@ void draw() {
     break;
 
   case 6:
-    image(howto, 0, 0, width, height);
+    image(howto2, 0, 0, width, height);
     break;
 
   case 7:
-    image(howto, 0, 0, width, height);
+    image(howto1, 0, 0, width, height);
     break;
   }
 }
