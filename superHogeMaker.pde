@@ -36,7 +36,8 @@ boolean move;  //画面表示の移動フラグ
 
 //対戦モード用変数
 Block block2;  //対戦用のブロック配列
-int boardPoint, boardCount, oldBoardCount, comp, playerPoint, pointValueB, pointValueP;  //それぞれのポイント
+int boardPoint, boardCount, oldBoardCount, playerPoint, pointValueB, pointValueP;  //それぞれのポイント
+//int comp;
 PImage [] numbers = new PImage[10];  //数字
 PImage clock, pointP, pointB, win_b, win_p, tie;  //アイコン、勝敗
 int startTime, remainTime, timeLimit;
@@ -429,11 +430,11 @@ void draw() {
         block2.getSerialData_battle(str);
         serial.write('a');
 
-        //ボード側ポイント処理用
-        if (!str.equals(oldstr)) {
-          comp++;
-        }
-        oldstr = str;
+        ////ボード側ポイント処理用
+        //if (!str.equals(oldstr)) {
+        //  comp++;
+        //}
+        //oldstr = str;
       } else {
         println("not available");
       }
@@ -597,7 +598,7 @@ void draw() {
           e.time=0;
           crush.rewind();
           crush.play();
-          playerPoint+=pointValueP;
+          playerPoint+=int(pointValueP/2);
         } else {
           //キャラ死亡、一時操作ストップ
           hitEne.rewind();
@@ -607,7 +608,7 @@ void draw() {
           player.right=false;
           player.left=false;
           player.jumping=false;
-          playerPoint-=int(pointValueP*3/5);
+          playerPoint-=int(pointValueP*2/5);
           //boardPoint+=pointValueB*1/5;
           player.killTime = 0;
         }
@@ -654,27 +655,29 @@ void draw() {
 
     //ポイント
     //ボード側点数カウント
-    boardCount=0;
-    for (int i=5; i<15; i++) {
-      for (int j=0; j<6; j++) {
-        if (block2.brick[i][j]>0) {
-          boardCount++;
-        }
-      }
-    }
+    //boardCount=0;
+    //for (int i=5; i<15; i++) {
+    //  for (int j=0; j<6; j++) {
+    //    if (block2.brick[i][j]>0) {
+    //      boardCount++;
+    //    }
+    //  }
+    //}
 
     //println("comp:" + comp);
     if (frameCount%60==0 && boardCount<=5) {
       //5個以下なら2秒ごとにポイント減
       boardPoint-=pointValueB;
     } 
-    if (boardCount>=5 && comp>3) {
+    //if (boardCount>=5 && comp>3) {
+    //if (boardCount>=5) {
       //一定以上配置を変更したらポイント増
-      boardPoint+=pointValueB;
-      comp = 0;
-    }
 
-    if (oldBoardCount<boardCount) {
+      //boardPoint+=pointValueB;
+      //comp = 0;
+    //}
+    
+    if(oldBoardCount<boardCount){
       addBlock.rewind();
       addBlock.play();
     }
