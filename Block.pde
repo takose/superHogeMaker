@@ -184,9 +184,10 @@ class Block {
           brickCount[i][j]--;
           if (brickCount[i][j]<0 && brick[i][j]!=2) {
             brickCount[i][j] = 0;
-          } else if(brickCount < -90){ // take about 3sec until board gain the item
+          } else if(brickCount[i][j] < -90){ // take about 3sec until board gain the item
             brick[i][j] = 1;
             brickCount[i][j] = 30;
+            boardPoint+=pointValueB;
           }
         }
       }
@@ -229,8 +230,13 @@ class Block {
     //描画
     for (int i=0; i<brick.length; i++) {
       for (int j=0; j<6; j++) {
-        if (brick[i][j]>0 && brickCount[i][j]==0) {
-          image(blocks[brick[i][j]-1], i*16*n, (j+3)*16*n, 16*n, 16*n);
+        if (brick[i][j]>0 && brickCount[i][j]<=0) {
+          int bufx=0,bufy=0;
+          if(brickCount[i][j]<0){
+            bufx = int(random(0.3)*brickCount[i][j]/10);
+            bufy = int(random(0.3)*brickCount[i][j]/10);
+          }
+          image(blocks[brick[i][j]-1], i*16*n+bufx, (j+3)*16*n+bufy, 16*n, 16*n);
         } else if (brick[i][j]>0 && brickCount[i][j]>0) {
           tint(255, 150);
           image(blocks[brick[i][j]-1], i*16*n, (j+3)*16*n, 16*n, 16*n);
