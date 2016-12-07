@@ -25,7 +25,7 @@ class Item {
   }
 
   void display() {
-    image(img, posX, posY, 16*n, 16*n);
+    image(img, posX, posY, img.width*n, img.height*n);
   }
 
   boolean isItem(int _x, int _y) {
