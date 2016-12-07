@@ -1,18 +1,16 @@
 class Block {
   PImage [] blocks=new PImage[4];
+  int size;
   int [][] brick;
   int [][] brickCount;  //出現までの時間を計る
-  int n;  //拡大倍率
   int area;
-  Block(int m, int num) {
+  Block(int m, int s) {
     //mは背景を何枚分使うかの枚数。ステージの長さ
-    //numは拡大倍率
-
+    size = s;
     blocks[0]=loadImage("block1.png");
     blocks[1]=loadImage("block2.png");
     blocks[2]=loadImage("block3.png");
     blocks[3]=loadImage("broken.png");
-    n=num;
     brick = new int[20*m][6];
     brickCount = new int[20*m][6];
     area=0;
@@ -28,19 +26,19 @@ class Block {
 
   int isFloor(int _x, int _y) {
 
-    int x=_x/(16*n);
+    int x=_x/(size);
     int y;
     if (x>=brick.length) {
       return height-48*n;
     }
-    if (_y>16*n*3) {
-      y=_y/(16*n)-3;
+    if (_y>size*3) {
+      y=_y/(size)-3;
     } else {
       y=-1;
     }
     for (int i=y; i<5; i++) {
       if (brick[x][i+1]>=1 && brickCount[x][i+1]==0) {
-        int tmp=(i+3)*16*n;
+        int tmp=(i+3)*size;
         return tmp;
       }
     }
@@ -48,7 +46,7 @@ class Block {
   }
 
   int isTop(int _x, int _y) {
-    if (_y<16*n*3) {
+    if (_y<size*3) {
       return 0;
     }
     int []chara=squares(_x, _y);
@@ -132,9 +130,6 @@ class Block {
         lines[j]=trim(lines[j]);
         int data[] = int(split(lines[j], ',') );
 
-        //println(data[0]+", "+data[1]);
-
-
         for (int i=0; i<data.length; i++) {
           if (brick[j+10*area][i]<=0 || data[i]<=0) {
             brick[j+10*area][i] = data[i];
@@ -203,11 +198,11 @@ class Block {
 
   int[] squares(int _x, int _y) {
     //キャラ座標をマス目に変換する用
-    int x=_x/(16*n);
+    int x=_x/size;
     int y;
-    if (_y>16*n*3 && _y<height-48*n) {
-      y=_y/(16*n)-3;
-    } else if (_y<16*n*3) {
+    if (_y>size*3 && _y<height-48*n) {
+      y=_y/size-3;
+    } else if (_y<size*3) {
       y=6;
     } else {
       y=-1;
@@ -229,10 +224,10 @@ class Block {
             bufx = int(random(0.5)*brickCount[i][j]/10);
             bufy = int(random(0.5)*brickCount[i][j]/10);
           }
-          image(blocks[brick[i][j]-1], i*16*n+bufx, (j+3)*16*n+bufy, 16*n, 16*n);
+          image(blocks[brick[i][j]-1], i*size+bufx, (j+3)*size+bufy, size, size);
         } else if (brick[i][j]>0 && brickCount[i][j]>0) {
           tint(255, 150);
-          image(blocks[brick[i][j]-1], i*16*n, (j+3)*16*n, 16*n, 16*n);
+          image(blocks[brick[i][j]-1], i*size, (j+3)*size, size, size);
           noTint();
         }
       }

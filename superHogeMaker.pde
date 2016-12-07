@@ -14,7 +14,7 @@ AudioPlayer bgm;
 AudioPlayer jumpSound, fin, brokenSound, itemSound, itemGet, gameover, crush, button, hitEne, addBlock, vanishBlock;
 
 //モード共通で使う変数
-int n;  //拡大倍率
+int n, size;  //拡大倍率
 int m=3;  //背景の枚数。ステージの長さ
 int page;  //どの画面にいるか
 int backX;  //背景X座標
@@ -102,13 +102,15 @@ void setup() {
   win_p = loadImage("win_p.png");
   tie = loadImage("tie.png");
 
-  block = new Block(m, n);
-  player=new Player(100, 10, n);
-  items= new ArrayList<Item>();
-  enemy= new ArrayList<Enemy>();
+  int cellSize = 16;
+  size = cellSize * n;
+  block = new Block(m, size);
+  player = new Player(100, 10, size, n);
+  items = new ArrayList<Item>();
+  enemy = new ArrayList<Enemy>();
   broken=new ArrayList<int[]>();
 
-  block2 = new Block(1, n);
+  block2 = new Block(1, size);
   pointValueB = 15;
   pointValueP = 25;
 
@@ -131,9 +133,9 @@ void draw() {
   case 1:
     //モード選択画面
     image(back[0], 0, 0, width, height);
-    image(play, 16*2*n, 16*4*n, 48*n, 32*n);
-    image(battle, 16*7*n, 16*4*n, 16*6*n, 32*n);
-    image(make, 16*15*n, 16*4*n, 48*n, 32*n);
+    image(play, 16*2*n, 16*4*n, play.width*n, play.height*n);
+    image(battle, 16*7*n, 16*4*n, battle.width*n, battle.height*n);
+    image(make, 16*15*n, 16*4*n, make.width*n, make.height*n);
     image(returnButton, width/2-64*n/2, 16*8*n, 64*n, 16*n);
     break;
 
@@ -150,7 +152,7 @@ void draw() {
     for (int i=0; i<back.length; i++) {
       image(back[i], backX+width*i, 0, width, height);
     }
-    image(goal, backX+width*m, 0, 48*n, height);
+    image(goal, backX+width*m, 0, goal.width*n, height);
 
     if (!bgm.isPlaying()&&player.alive) {
       bgm.rewind();
@@ -198,7 +200,7 @@ void draw() {
         if (eneY==1) {
           eneY=height-48*n;
         }
-        enemy.add(new Enemy((int)random(width/4, width)+eneNumber*width, eneY, n, (int)random(2)));
+        enemy.add(new Enemy((int)random(width/4, width)+eneNumber*width, eneY, size, n, (int)random(2)));
         eneNumber++;
       }
       //finish
@@ -503,7 +505,9 @@ void draw() {
     }
 
     //床座標取得
-    floor = block2.isFloor(player.posX+8*n, player.posY+8*n);
+    int f1 = block2.isFloor(player.posX+4*n, player.posY+8*n);
+    int f2 = block2.isFloor(player.posX+12*n, player.posY+8*n);
+    floor = f1 < f2 ? f1 : f2;
     player.move(floor);
 
 
@@ -580,15 +584,15 @@ void draw() {
       if (eneY<=0) {
         //空から
         eneY=-16*n;
-        enemy.add(new Enemy((int)random(16*n*6, width-16*n*5), eneY, n, (int)random(2)));
+        enemy.add(new Enemy((int)random(16*n*6, width-16*n*5), eneY, size, n, (int)random(2)));
       } else if (eneY>=1 && eneY<=3) {
         //途中のブロックの上
         eneY=(2*eneY-2+3)*16*n-4;
-        enemy.add(new Enemy(eneX, eneY, n, (int)random(2)));
+        enemy.add(new Enemy(eneX, eneY, size, n, (int)random(2)));
       } else {
         //地面
         eneY=height-16*3*n-4;
-        enemy.add(new Enemy(eneX, eneY, n, (int)random(2)));
+        enemy.add(new Enemy(eneX, eneY, size, n, (int)random(2)));
       }
 
       //進行方向設定
@@ -677,18 +681,10 @@ void draw() {
       }
     }
 
-    //println("comp:" + comp);
     if (frameCount%60==0 && boardCount<=5) {
       //5個以下なら2秒ごとにポイント減
       boardPoint-=pointValueB;
-    } 
-    //if (boardCount>=5 && comp>3) {
-    //if (boardCount>=5) {
-      //一定以上配置を変更したらポイント増
-
-      //boardPoint+=pointValueB;
-      //comp = 0;
-    //}
+    }
     
     if(oldBoardCount<boardCount){
       addBlock.rewind();
@@ -915,7 +911,7 @@ void initialize() {
   items.clear();  //前回のアイテムが残らないようリストを空にする
   enemy.clear();  //前回の敵以下同文
   broken.clear();
-  enemy.add(new Enemy((int)random(width/2, width), 0, n, (int)random(2)) );  //最初の一匹
+  enemy.add(new Enemy((int)random(width/2, width), 0, size, n, (int)random(2)) );  //最初の一匹
   minim=new Minim(this);
   bgm = minim.loadFile( "BGM.mp3" );
   player.finish=false;
@@ -945,58 +941,28 @@ void setBrick() {
   }
 
   ArrayList<int[]> initPos = new ArrayList<int[]>();
-  initPos.add(new int[] {
-    0, 1
-    }
-    );
-  initPos.add(new int[] {
-    1, 1
-    }
-    );
+  initPos.add(new int[] {0, 1});
+  initPos.add(new int[] {1, 1});
 
   for (int i=0; i<3; i++) {
-    initPos.add(new int[] {
-      i, 3
-      }
-      );
+    initPos.add(new int[] {i, 3});
   }
   for (int i=0; i<4; i++) {
-    initPos.add(new int[] {
-      i, 5
-      }
-      );
+    initPos.add(new int[] {i, 5});
   }
 
-  initPos.add(new int[] {
-    19, 1
-    }
-    );
-  initPos.add(new int[] {
-    18, 1
-    }
-    );
+  initPos.add(new int[] {19, 1});
+  initPos.add(new int[] {18, 1});
   for (int i=0; i<3; i++) {
-    initPos.add(new int[] {
-      19-i, 3
-      }
-      );
+    initPos.add(new int[] {19-i, 3});
   }
   for (int i=0; i<4; i++) {
-    initPos.add(new int[] {
-      19-i, 5
-      }
-      );
+    initPos.add(new int[] {19-i, 5});
   }
 
   for (int[] b : initPos) {
     block2.brick[b[0]][b[1]] = 1;
   }
-  /*for (int i=0; i<5; i++) {
-   int k = (int)random(initPos.size());
-   int[] b = initPos.get(k);
-   block2.brick[b[0]][b[1]] = 2;
-   initPos.remove(k);
-   }*/
 }
 
 void drawPoints(int x, int y, int point, int digit) {
