@@ -5,15 +5,16 @@ class Player {
   PImage [] jumpR=new PImage[2];  //ジャンプ右向き
   PImage [] jumpL=new PImage[2];  //ジャンプ左向き
   PImage dead;  //死に顔
-  int n;  //拡大倍率
+  int size, n;
   int beforeFloor;
   boolean touch;  //床についてるか(jump中はtrue)
   boolean isFacingRight;  //どっち向いてるか(右でtrue)
   boolean alive, finish;  //生死
   boolean right, left, jumping;  //左右に進んでいるか
 
-  Player(int x, int y, int num) {
-    n=num;
+  Player(int x, int y, int s, int _n) {
+    n = _n;
+    size = s;
     touch=false;
     alive=true;
     finish=false;
@@ -97,32 +98,32 @@ class Player {
 
   void draw() {
     if (!alive) {
-      image(dead, posX, posY, 16*n, 16*n);
+      image(dead, posX, posY, size, size);
     } else if (jumping) {
       if (isFacingRight) {
         if (time<=1) {
-          image(jumpR[0], posX, posY, 16*n, 16*n);
+          image(jumpR[0], posX, posY, size, size);
         } else {
-          image(jumpR[1], posX, posY, 16*n, 16*n);
+          image(jumpR[1], posX, posY, size, size);
         }
       } else {
         if (time<=1) {
-          image(jumpL[0], posX, posY, 16*n, 16*n);
+          image(jumpL[0], posX, posY, size, size);
         } else {
-          image(jumpL[1], posX, posY, 16*n, 16*n);
+          image(jumpL[1], posX, posY, size, size);
         }
       }
     } else if (left && !right) {
       isFacingRight=false;
-      image(walkL[time%6], posX, posY, 16*n, 16*n);
+      image(walkL[time%6], posX, posY, size, size);
     } else if (right && !left) {
       isFacingRight=true;
-      image(walkR[time%6], posX, posY, 16*n, 16*n);
+      image(walkR[time%6], posX, posY, size, size);
     } else {
       if (isFacingRight) {
-        image(walkR[2], posX, posY, 16*n, 16*n);
+        image(walkR[2], posX, posY, size, size);
       } else {
-        image(walkL[2], posX, posY, 16*n, 16*n);
+        image(walkL[2], posX, posY, size, size);
       }
     }
   }

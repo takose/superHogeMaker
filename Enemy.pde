@@ -3,8 +3,8 @@ class Enemy extends Player {
   PImage [] eneL = new PImage[4];
   PImage [] eneR = new PImage[4];
 
-  Enemy(int ex, int ey, int num, int _kind) {
-    super(ex, ey, num);
+  Enemy(int posX, int posY, int size, int n, int _kind) {
+    super(posX, posY, size, n);
     kind = _kind;
     speedX = 1;
     if (kind==0) {
@@ -31,18 +31,18 @@ class Enemy extends Player {
 
   void draw() {
     if (!alive) {
-      image(dead, posX, posY, 16*n, 16*n);
+      image(dead, posX, posY, dead.width*n, dead.height*n);
     } else if (touch==true) {
       if (isFacingRight) {
-        image(eneR[time%4], posX, posY, 16*n, 16*n);
+        image(eneR[time%4], posX, posY, eneR[time%4].width*n, eneR[time%4].height*n);
       } else {
-        image(eneL[time%4], posX, posY, 16*n, 16*n);
+        image(eneL[time%4], posX, posY, eneL[time%4].width*n, eneL[time%4].height*n);
       }
     } else {
       if (isFacingRight) {
-        image(eneR[1], posX, posY, 16*n, 16*n);
+        image(eneR[1], posX, posY, eneR[1].width*n, eneR[1].height*n);
       } else {
-        image(eneL[1], posX, posY, 16*n, 16*n);
+        image(eneL[1], posX, posY, eneR[2].width, eneL[1].height*n);
       }
     }
   }
