@@ -127,7 +127,7 @@ void draw() {
     //スタート画面
     image(back[0], 0, 0, width, height);
     image(title, width/2-title.width*n/2, 16*3*n, title.width*n, title.height*n);
-    image(start, width/2-64*n/2, 16*7*n, 64*n, 16*n);
+    image(start, width/2-64*n/2, 16*7*n, start.width*n, start.height*n);
     break;
 
   case 1:
@@ -136,7 +136,7 @@ void draw() {
     image(play, 16*2*n, 16*4*n, play.width*n, play.height*n);
     image(battle, 16*7*n, 16*4*n, battle.width*n, battle.height*n);
     image(make, 16*15*n, 16*4*n, make.width*n, make.height*n);
-    image(returnButton, width/2-64*n/2, 16*8*n, 64*n, 16*n);
+    image(returnButton, width/2-64*n/2, 16*8*n, returnButton.width*n, returnButton.height*n);
     break;
 
   case 2:
@@ -334,7 +334,7 @@ void draw() {
     popMatrix();
 
     //ポイント表示
-    image(pointP, 16*n, 11*16*n, 16*n, 16*n);
+    image(pointP, 16*n, 11*16*n, pointP.width*n, pointP.height*n);
     drawPoints(2*16*n, 11*16*n, playerPoint, 4);
 
     //クリア表示
@@ -701,9 +701,9 @@ void draw() {
 
 
     //ポイント表示
-    image(pointP, 16*n, 11*16*n, 16*n, 16*n);
+    image(pointP, 16*n, 11*16*n, pointP.width*n, pointP.height*n);
     drawPoints(2*16*n, 11*16*n, playerPoint, 4);
-    image(pointB, 16*16*n, 11*16*n, 16*n, 16*n);
+    image(pointB, 16*16*n, 11*16*n, pointB.width*n, pointB.height*n);
     drawPoints(17*16*n, 11*16*n, boardPoint, 4);
 
     //残り時間
@@ -718,7 +718,7 @@ void draw() {
       page = 5;
     }
     drawPoints(18*16*n, 0, remainTime, 2);
-    image(clock, 17*16*n, 0, 16*n, 16*n);
+    image(clock, 17*16*n, 0, clock.width*n, clock.height*n);
 
     //敵に当たって少し経ったら生き返る
     if (!player.alive && player.time>=5) {
@@ -740,11 +740,11 @@ void draw() {
       img = tie;
     }
     image(img, width/2-(img.width/2)*n, 3*16*n, img.width*n, img.height*n);
-    image(pointP, 4*16*n, 6*16*n, 16*n, 16*n);
+    image(pointP, 4*16*n, 6*16*n, pointP.width*n, pointP.height*n);
     drawPoints(5*16*n, 6*16*n, playerPoint, 4);
-    image(pointB, 13*16*n, 6*16*n, 16*n, 16*n);
+    image(pointB, 13*16*n, 6*16*n, pointB.width*n, pointB.height*n);
     drawPoints(14*16*n, 6*16*n, boardPoint, 4);
-    image(returnButton, width/2-64*n/2, 16*8*n, 64*n, 16*n);
+    image(returnButton, width/2-64*n/2, 16*8*n, returnButton.width*n, returnButton.height*n);
     break;
 
   case 6:
@@ -976,6 +976,6 @@ void drawPoints(int x, int y, int point, int digit) {
     p = point%10;
     point = point/10;
     img = numbers[p];
-    image(img, x+(i*8*n), y, 8*n, 16*n);
+    image(img, x+(i*8*n), y, img.width*n, img.height*n);
   }
 }
