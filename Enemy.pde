@@ -31,18 +31,18 @@ class Enemy extends Player {
 
   void draw() {
     if (!alive) {
-      image(dead, posX, posY, dead.width*n, dead.height*n);
+      image(dead, posX, posY, size, size);
     } else if (touch==true) {
       if (isFacingRight) {
-        image(eneR[time%4], posX, posY, eneR[time%4].width*n, eneR[time%4].height*n);
+        image(eneR[time%4], posX, posY, size, size);
       } else {
-        image(eneL[time%4], posX, posY, eneL[time%4].width*n, eneL[time%4].height*n);
+        image(eneL[time%4], posX, posY, size, size);
       }
     } else {
       if (isFacingRight) {
-        image(eneR[1], posX, posY, eneR[1].width*n, eneR[1].height*n);
+        image(eneR[1], posX, posY, size, size);
       } else {
-        image(eneL[1], posX, posY, eneR[2].width, eneL[1].height*n);
+        image(eneL[1], posX, posY, size, size);
       }
     }
   }

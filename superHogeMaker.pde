@@ -11,7 +11,7 @@ Serial serial;
 Minim minim;
 
 AudioPlayer bgm;
-AudioPlayer jumpSound, fin, brokenSound, itemSound, itemGet, gameover, crush, button, hitEne, addBlock, vanishBlock;
+AudioPlayer jumpSound, fin, brokenSound, itemSound, itemGet, gameover, crush, button, hitEne, addBlock, vanishBlock, throwSound;
 
 //モード共通で使う変数
 int n, size;  //拡大倍率
@@ -42,6 +42,8 @@ PImage [] numbers = new PImage[10];  //数字
 PImage clock, pointP, pointB, win_b, win_p, tie;  //アイコン、勝敗
 int startTime, remainTime, timeLimit;
 String oldstr;
+ArrayList<Bullet> bullets;
+
 
 void settings() {
   if (displayHeight*20/12 < displayWidth) {
@@ -76,6 +78,7 @@ void setup() {
   hitEne = minim.loadFile("cancel6.mp3");
   addBlock = minim.loadFile("button40.mp3");
   vanishBlock = minim.loadFile("menu2.mp3");
+  throwSound = minim.loadFile("dart1.mp3");
 
   title=loadImage("title.png");
   start=loadImage("startButton2.png");
@@ -108,7 +111,8 @@ void setup() {
   player = new Player(100, 10, size, n);
   items = new ArrayList<Item>();
   enemy = new ArrayList<Enemy>();
-  broken=new ArrayList<int[]>();
+  broken = new ArrayList<int[]>();
+  bullets = new ArrayList<Bullet>();
 
   block2 = new Block(1, size);
   pointValueB = 15;
@@ -119,7 +123,7 @@ void setup() {
 
 
 void draw() {
-  println(frameRate);
+  //println(frameRate);
 
   switch(page) {
 
@@ -669,6 +673,26 @@ void draw() {
       }
       e.draw();
     }
+    
+    
+    for (Bullet b : bullets) {
+      if (abs(b.firX-b.posX)>=size*2) {
+        //消滅
+        bullets.remove(b);
+        break;
+      }
+    }
+    /*
+      displayとremoveを同じfor文にいれると、
+     removeされたときbreakしなければならないため、
+     removeされたものより後ろのリストのアイテムが
+     一瞬描画されなくなる。なのでfor文を分ける。
+     */
+    for (Bullet b : bullets) {
+      b.move();
+      b.display();
+    }
+    
 
     //ポイント
     //ボード側点数カウント
@@ -791,6 +815,16 @@ void keyPressed() {
       player.jumping=true;
     }
   }
+  
+  if (keyCode==DOWN && (page==2 || page==4) && player.alive && !player.finish) {
+    if (!player.jumping&&player.touch&&!player.throwing) {
+      throwSound.rewind();
+      throwSound.play();
+      player.time=0;
+      player.throwing=true;
+      bullets.add(new Bullet(player.posX+8*n, player.posY+8*n, n, player.isFacingRight));
+    }
+  }
 }
 
 void keyReleased() {
@@ -911,6 +945,7 @@ void initialize() {
   items.clear();  //前回のアイテムが残らないようリストを空にする
   enemy.clear();  //前回の敵以下同文
   broken.clear();
+  bullets.clear();
   enemy.add(new Enemy((int)random(width/2, width), 0, size, n, (int)random(2)) );  //最初の一匹
   minim=new Minim(this);
   bgm = minim.loadFile( "BGM.mp3" );
