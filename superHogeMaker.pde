@@ -448,11 +448,11 @@ void draw() {
     }
 
     block2.countDown();
-    for(int i=0; i<block2.brick.length; i++){
-     for(int j=0; j<6; j++){
-       if (block2.brickCount[i][j]<0 && block2.brick[i][j]!=2) {
+    for (int i=0; i<block2.brick.length; i++) {
+      for (int j=0; j<6; j++) {
+        if (block2.brickCount[i][j]<0 && block2.brick[i][j]!=2) {
           block2.brickCount[i][j] = 0;
-        } else if(block2.brickCount[i][j] < -90){ // take about 3sec until board gain the item
+        } else if (block2.brickCount[i][j] < -90) { // take about 3sec until board gain the item
           block2.brick[i][j] = 1;
           block2.brickCount[i][j] = 30;
           boardPoint+=pointValueB;
@@ -634,6 +634,17 @@ void draw() {
           player.killTime = 0;
         }
       }
+      for (Bullet b : bullets) {
+        if (b.isBullet(e.posX+8*n, e.posY+8*n)) {
+          e.alive = false;
+          e.time = 0;
+          crush.rewind();
+          crush.play();
+          playerPoint+=int(pointValueP/2);
+          bullets.remove(b);
+          break;
+        }
+      }
       if (!e.alive && e.time>4) {
         //敵死亡からしばらくしたら消える
         enemy.remove(e);
@@ -673,8 +684,8 @@ void draw() {
       }
       e.draw();
     }
-    
-    
+
+
     for (Bullet b : bullets) {
       if (abs(b.firX-b.posX)>=size*2) {
         //消滅
@@ -682,17 +693,12 @@ void draw() {
         break;
       }
     }
-    /*
-      displayとremoveを同じfor文にいれると、
-     removeされたときbreakしなければならないため、
-     removeされたものより後ろのリストのアイテムが
-     一瞬描画されなくなる。なのでfor文を分ける。
-     */
+    //displayとremoveを同じfor文にいれると（以下略）
     for (Bullet b : bullets) {
       b.move();
       b.display();
     }
-    
+
 
     //ポイント
     //ボード側点数カウント
@@ -709,8 +715,8 @@ void draw() {
       //5個以下なら2秒ごとにポイント減
       boardPoint-=pointValueB;
     }
-    
-    if(oldBoardCount<boardCount){
+
+    if (oldBoardCount<boardCount) {
       addBlock.rewind();
       addBlock.play();
     }
@@ -815,7 +821,7 @@ void keyPressed() {
       player.jumping=true;
     }
   }
-  
+
   if (keyCode==DOWN && (page==2 || page==4) && player.alive && !player.finish) {
     if (!player.jumping&&player.touch&&!player.throwing) {
       throwSound.rewind();

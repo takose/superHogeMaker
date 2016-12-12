@@ -27,6 +27,13 @@ class Bullet {
     }
   }
 
+  boolean isBullet(int _x, int _y) {
+    if (dist(_x, _y, posX+2*n, posY+2*n)<=6*n) {
+      return true;
+    }
+    return false;
+  }
+
   void display() {
     if (time>4) {
       image(img, posX, posY, img.width*n, img.height*n);

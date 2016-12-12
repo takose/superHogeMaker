@@ -219,8 +219,8 @@ class Block {
     for (int i=0; i<brick.length; i++) {
       for (int j=0; j<6; j++) {
         if (brick[i][j]>0 && brickCount[i][j]<=0) {
-          int bufx=0,bufy=0;
-          if(brickCount[i][j]<0){
+          int bufx=0, bufy=0;
+          if (brickCount[i][j]<0) {
             bufx = int(random(0.5)*brickCount[i][j]/10);
             bufy = int(random(0.5)*brickCount[i][j]/10);
           }

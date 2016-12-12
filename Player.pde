@@ -5,6 +5,7 @@ class Player {
   PImage [] jumpR=new PImage[2];  //ジャンプ右向き
   PImage [] jumpL=new PImage[2];  //ジャンプ左向き
   PImage [] throwR=new PImage[2];
+  PImage [] throwL=new PImage[2];
   PImage dead;  //死に顔
   int size, n;
   int beforeFloor;
@@ -47,9 +48,12 @@ class Player {
 
     jumpL[0]=loadImage("jumpL1.png");
     jumpL[1]=loadImage("jumpL2.png");
-    
+
     throwR[0]=loadImage("throwR1.png");
     throwR[1]=loadImage("throwR2.png");
+
+    throwL[0]=loadImage("throwL1.png");
+    throwL[1]=loadImage("throwL2.png");
 
     dead=loadImage("dead.png");
   }
@@ -82,8 +86,8 @@ class Player {
     } else {
       touch=true;
     }
-    
-    if(throwing && time>3){
+
+    if (throwing && time>3) {
       throwing = false;
     }
   }
@@ -129,13 +133,21 @@ class Player {
     } else if (right && !left) {
       isFacingRight=true;
       image(walkR[time%6], posX, posY, size, size);
-    } else if(throwing){
-      if (time<=1) {
+    } else if (throwing) {
+      if (isFacingRight) {
+        if (time<=1) {
           image(throwR[0], posX, posY, size, size);
         } else {
           image(throwR[1], posX, posY, size, size);
         }
-    }else {
+      } else {
+        if (time<=1) {
+          image(throwL[0], posX, posY, size, size);
+        } else {
+          image(throwL[1], posX, posY, size, size);
+        }
+      }
+    } else {
       if (isFacingRight) {
         image(walkR[2], posX, posY, size, size);
       } else {
