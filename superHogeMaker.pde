@@ -863,16 +863,42 @@ void keyReleased() {
     if (keyCode==LEFT) {
       player.left=false;
     }
+  } else if (page==0) {
+    if (key == 'n') {
+      button.rewind();
+      button.play();
+      page=1;
+    }
   } else if (page==1) {
     if (key == 'h') {
+      button.rewind();
+      button.play();
       page=6;
+    } else if (key == 'a') {
+      button.rewind();
+      button.play();
+      page=2;
+    } else if (key == 't') {
+      button.rewind();
+      button.play();
+      page=3;
+    } else if (key == 'k') {
+      button.rewind();
+      button.play();
+      startTime = millis()/1000;
+      timeLimit = 30;
+      page=4;
     }
   } else if (page==6) {
     if (keyCode == RIGHT) {
+      button.rewind();
+      button.play();
       page=7;
     }
   } else if (page==7) {
     if (keyCode == LEFT) {
+      button.rewind();
+      button.play();
       page=6;
     }
   }
