@@ -130,17 +130,17 @@ void draw() {
   case 0:
     //スタート画面
     image(back[0], 0, 0, width, height);
-    image(title, width/2-title.width*n/2, 16*3*n, title.width*n, title.height*n);
-    image(start, width/2-64*n/2, 16*7*n, start.width*n, start.height*n);
+    image(title, width/2-title.width*n/2, 3*size, title.width*n, title.height*n);
+    image(start, width/2-start.width*n/2, 7*size, start.width*n, start.height*n);
     break;
 
   case 1:
     //モード選択画面
     image(back[0], 0, 0, width, height);
-    image(play, 16*2*n, 16*4*n, play.width*n, play.height*n);
-    image(battle, 16*7*n, 16*4*n, battle.width*n, battle.height*n);
-    image(make, 16*15*n, 16*4*n, make.width*n, make.height*n);
-    image(returnButton, width/2-64*n/2, 16*8*n, returnButton.width*n, returnButton.height*n);
+    image(play, 2*size, 4*size, play.width*n, play.height*n);
+    image(battle, 7*size, 4*size, battle.width*n, battle.height*n);
+    image(make, 15*size, 4*size, make.width*n, make.height*n);
+    image(returnButton, width/2-returnButton.width*n/2, 8*size, returnButton.width*n, returnButton.height*n);
     break;
 
   case 2:
@@ -148,7 +148,7 @@ void draw() {
 
 
     //キャラの動きに合わせてスクロール
-    if (player.posX>-backX+500 && player.right && backX>-width*(m-1)-48*n ) {
+    if (player.posX>-backX+500 && player.right && backX>-width*(m-1)-size*3 ) {
       backX-=player.speedX*n;
     }
 
@@ -194,21 +194,21 @@ void draw() {
 
     //キャラ移動など
 
-    if (player.right && player.posX<width*m+32*n && !block.isRight(player.posX+16*n, player.posY+14*n)) {
+    if (player.right && player.posX<width*m+size*2 && !block.isRight(player.posX+size, player.posY+14*n)) {
       player.moveRight();
 
       //キャラが一定座標まで来たら敵を出現
-      if (player.posX+16*n>eneNumber*width && eneNumber<m) {
+      if (player.posX+size>eneNumber*width/2 && eneNumber<m*2) {
         //空からor地上から
         int eneY=(int)random(2);
         if (eneY==1) {
-          eneY=height-48*n;
+          eneY=height-size*3;
         }
-        enemy.add(new Enemy((int)random(width/4, width)+eneNumber*width, eneY, size, n, (int)random(2)));
+        enemy.add(new Enemy((int)random(width/4, width/2)+eneNumber*width/2, eneY, size, n, (int)random(2)));
         eneNumber++;
       }
       //finish
-      if (player.posX>width*m+16*n) {
+      if (player.posX>width*m+size) {
         player.time=0;
         player.finish=true;
         fin.rewind();
@@ -244,10 +244,7 @@ void draw() {
         brokenSound.rewind();
         brokenSound.play();
         block.brick[chara[0]][chara[1]]=4;
-        broken.add(new int[] {
-          chara[0], chara[1], 0
-          }
-          );
+        broken.add(new int[] { chara[0], chara[1], 0 } );
       }
     }
 
@@ -301,12 +298,23 @@ void draw() {
           stop();
         }
       }
+      for (Bullet b : bullets) {
+        if (b.isBullet(e.posX+8*n, e.posY+8*n)) {
+          e.alive = false;
+          e.time = 0;
+          crush.rewind();
+          crush.play();
+          playerPoint+=int(pointValueP/2);
+          bullets.remove(b);
+          break;
+        }
+      }
       if (!e.alive && e.time>4) {
         //踏まれてしばらくしたら消える
         enemy.remove(e);
         break;
       }
-      if (e.posX+16*n<0) {
+      if (e.posX+size<0) {
         //ステージ外に行ったら消える
         enemy.remove(e);
         break;
@@ -319,7 +327,7 @@ void draw() {
     for (Enemy e : enemy) {
       int eneFloor=block.isFloor(e.posX+12*n, e.posY);
       e.move(eneFloor);
-      if (e.isFacingRight && block.isRight(e.posX+16*n, e.posY+14*n)) {
+      if (e.isFacingRight && block.isRight(e.posX+size, e.posY+14*n)) {
         e.isFacingRight = false;
       } else
         if (!e.isFacingRight && block.isLeft(e.posX, e.posY+14*n)) {
@@ -335,15 +343,29 @@ void draw() {
       e.draw();
     }
 
+    //弾
+    for (Bullet b : bullets) {
+      if (abs(b.firX-b.posX)>=size*2) {
+        //消滅
+        bullets.remove(b);
+        break;
+      }
+    }
+    //displayとremoveを同じfor文にいれると（以下略）
+    for (Bullet b : bullets) {
+      b.move();
+      b.display();
+    }
+
     popMatrix();
 
     //ポイント表示
-    image(pointP, 16*n, 11*16*n, pointP.width*n, pointP.height*n);
-    drawPoints(2*16*n, 11*16*n, playerPoint, 4);
+    image(pointP, size, 11*size, pointP.width*n, pointP.height*n);
+    drawPoints(2*size, 11*size, playerPoint, 4);
 
     //クリア表示
     if (player.finish) {
-      image(stageClear, width/2-(stageClear.width/2)*n, 4*16*n, stageClear.width*n, stageClear.height*n);
+      image(stageClear, width/2-(stageClear.width/2)*n, 4*size, stageClear.width*n, stageClear.height*n);
     }
 
     /*
@@ -398,15 +420,15 @@ void draw() {
     //編集可能範囲の表示
     noStroke();
     fill(0, 0, 0, 100);
-    rect(0, 0, width*m, 16*3*n);
-    rect(0, 9*16*n, width*m, 16*3*n);
+    rect(0, 0, width*m, 3*size);
+    rect(0, 9*size, width*m, 3*size);
     fill(0, 0, 0, 30);
-    rect((block.area-2)*16*10*n, 3*16*n, 20*16*n, 6*16*n);
-    rect((block.area+1)*16*10*n, 3*16*n, 10*16*n, 6*16*n);
+    rect((block.area-2)*10*size, 3*size, 20*size, 6*size);
+    rect((block.area+1)*10*size, 3*size, 10*size, 6*size);
     strokeWeight(n);
     stroke(255, 0, 0);
     noFill();
-    rect(block.area*10*16*n, 3*16*n, 10*16*n, 6*16*n);
+    rect(block.area*10*size, 3*size, 10*size, 6*size);
 
     popMatrix();
 
@@ -425,7 +447,7 @@ void draw() {
     strokeWeight(n);
     stroke(77, 69, 64, 120);
     noFill();
-    rect(5*16*n, 3*16*n, 10*16*n, 6*16*n);
+    rect(5*size, 3*size, 10*size, 6*size);
 
     //ブロック
 
@@ -500,7 +522,7 @@ void draw() {
 
     //キャラ移動など
 
-    if (player.right && player.posX<width-16*n && !block2.isRight(player.posX+16*n, player.posY+14*n)) {
+    if (player.right && player.posX<width-size && !block2.isRight(player.posX+size, player.posY+14*n)) {
       player.moveRight();
     }
 
@@ -587,11 +609,11 @@ void draw() {
 
       if (eneY<=0) {
         //空から
-        eneY=-16*n;
-        enemy.add(new Enemy((int)random(16*n*6, width-16*n*5), eneY, size, n, (int)random(2)));
+        eneY=-size;
+        enemy.add(new Enemy((int)random(size*6, width-size*5), eneY, size, n, (int)random(2)));
       } else if (eneY>=1 && eneY<=3) {
         //途中のブロックの上
-        eneY=(2*eneY-2+3)*16*n-4;
+        eneY=(2*eneY-2+3)*size-4;
         enemy.add(new Enemy(eneX, eneY, size, n, (int)random(2)));
       } else {
         //地面
@@ -612,7 +634,7 @@ void draw() {
     for (Enemy e : enemy) {
 
       //キャラとの当たり判定
-      if (dist(e.posX+(16*n)/2, e.posY+(16*n)/2, player.posX+(16*n)/2, player.posY+(12*n)/2)<=16*n && e.alive && player.alive && player.killTime>11) {
+      if (dist(e.posX+(size)/2, e.posY+(size)/2, player.posX+(size)/2, player.posY+(12*n)/2)<=size && e.alive && player.alive && player.killTime>11) {
         if (player.posY+(6*n)<e.posY && player.alive && e.touch) {
           //キャラのほうが上にいるなら敵消滅
           e.alive=false;
@@ -650,7 +672,7 @@ void draw() {
         enemy.remove(e);
         break;
       }
-      if (e.posX<-16*n-4 || e.posX>width+16*n+4) {
+      if (e.posX<-size-4 || e.posX>width+size+4) {
         //ステージ外に行ったら消える
         enemy.remove(e);
         break;
@@ -670,7 +692,7 @@ void draw() {
         eneFloor=block2.isFloor(e.posX+12*n, e.posY);
       }
       e.move(eneFloor);
-      if (block2.isRight(e.posX+16*n, e.posY+14*n)) {
+      if (block2.isRight(e.posX+size, e.posY+14*n)) {
         e.isFacingRight = false;
       } else if (block2.isLeft(e.posX, e.posY+14*n)) {
         e.isFacingRight = true;
@@ -685,7 +707,7 @@ void draw() {
       e.draw();
     }
 
-
+    //弾
     for (Bullet b : bullets) {
       if (abs(b.firX-b.posX)>=size*2) {
         //消滅
@@ -731,10 +753,10 @@ void draw() {
 
 
     //ポイント表示
-    image(pointP, 16*n, 11*16*n, pointP.width*n, pointP.height*n);
-    drawPoints(2*16*n, 11*16*n, playerPoint, 4);
-    image(pointB, 16*16*n, 11*16*n, pointB.width*n, pointB.height*n);
-    drawPoints(17*16*n, 11*16*n, boardPoint, 4);
+    image(pointP, size, 11*size, pointP.width*n, pointP.height*n);
+    drawPoints(2*size, 11*size, playerPoint, 4);
+    image(pointB, 16*size, 11*size, pointB.width*n, pointB.height*n);
+    drawPoints(17*size, 11*size, boardPoint, 4);
 
     //残り時間
     remainTime = timeLimit-(millis()/1000-startTime);
@@ -747,8 +769,8 @@ void draw() {
       stop();
       page = 5;
     }
-    drawPoints(18*16*n, 0, remainTime, 2);
-    image(clock, 17*16*n, 0, clock.width*n, clock.height*n);
+    drawPoints(18*size, 0, remainTime, 2);
+    image(clock, 17*size, 0, clock.width*n, clock.height*n);
 
     //敵に当たって少し経ったら生き返る
     if (!player.alive && player.time>=5) {
@@ -769,12 +791,12 @@ void draw() {
     } else {
       img = tie;
     }
-    image(img, width/2-(img.width/2)*n, 3*16*n, img.width*n, img.height*n);
-    image(pointP, 4*16*n, 6*16*n, pointP.width*n, pointP.height*n);
-    drawPoints(5*16*n, 6*16*n, playerPoint, 4);
-    image(pointB, 13*16*n, 6*16*n, pointB.width*n, pointB.height*n);
-    drawPoints(14*16*n, 6*16*n, boardPoint, 4);
-    image(returnButton, width/2-64*n/2, 16*8*n, returnButton.width*n, returnButton.height*n);
+    image(img, width/2-(img.width/2)*n, 3*size, img.width*n, img.height*n);
+    image(pointP, 4*size, 6*size, pointP.width*n, pointP.height*n);
+    drawPoints(5*size, 6*size, playerPoint, 4);
+    image(pointB, 13*size, 6*size, pointB.width*n, pointB.height*n);
+    drawPoints(14*size, 6*size, boardPoint, 4);
+    image(returnButton, width/2-returnButton.width*n/2, 8*size, returnButton.width*n, returnButton.height*n);
     break;
 
   case 6:
@@ -873,7 +895,7 @@ void keyReleased() {
 void mousePressed() {
   switch(page) {
   case 0:
-    if (mouseX>=16*8*n && mouseX<=16*12*n && mouseY>=16*7*n && mouseY<=16*8*n) {
+    if (mouseX>=8*size && mouseX<=12*size && mouseY>=7*size && mouseY<=8*size) {
       button.rewind();
       button.play();
       page=1;
@@ -881,23 +903,23 @@ void mousePressed() {
     break;
 
   case 1:
-    if (mouseY>=16*4*n && mouseY<=16*6*n) {
-      if (mouseX>=16*2*n && mouseX<=16*5*n) {
+    if (mouseY>=4*size && mouseY<=6*size) {
+      if (mouseX>=2*size && mouseX<=5*size) {
         button.rewind();
         button.play();
         page=2;
-      } else if (mouseX>=16*15*n && mouseX<=18*16*n) {
+      } else if (mouseX>=15*size && mouseX<=18*size) {
         button.rewind();
         button.play();
         page=3;
-      } else if (mouseX>=16*7*n && mouseX<=16*13*n) {
+      } else if (mouseX>=7*size && mouseX<=13*size) {
         button.rewind();
         button.play();
         startTime = millis()/1000;
         timeLimit = 30;
         page=4;
       }
-    } else if (mouseX>=16*8*n && mouseX<=16*12*n && mouseY>=16*8*n && mouseY<=16*9*n) {
+    } else if (mouseX>=8*size && mouseX<=12*size && mouseY>=8*size && mouseY<=9*size) {
       button.rewind();
       button.play();
       page=0;
@@ -911,7 +933,7 @@ void mousePressed() {
     int mY=mouseY;
     for (int i=0; i<block.brick.length; i++) {
       for (int j=0; j<6; j++) {
-        if (block.brick[i][j]>0 && mX>i*16*n && mX<i*16*n+16*n && mY>(j+3)*16*n && mY<(j+3)*16*n+16*3) {
+        if (block.brick[i][j]>0 && mX>i*size && mX<i*size+size && mY>(j+3)*size && mY<(j+3)*size+16*3) {
           block.brick[i][j]++;
           if (block.brick[i][j]>=3) {
             block.brick[i][j]=1;
@@ -923,7 +945,7 @@ void mousePressed() {
     break;
 
   case 5:
-    if (mouseX>=16*8*n && mouseX<=16*12*n && mouseY>=16*8*n && mouseY<=16*9*n) {
+    if (mouseX>=8*size && mouseX<=12*size && mouseY>=8*size && mouseY<=9*size) {
       button.rewind();
       button.play();
       initialize();
