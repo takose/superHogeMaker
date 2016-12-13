@@ -29,7 +29,7 @@ class Block {
     int x=_x/(size);
     int y;
     if (x>=brick.length) {
-      return height-48*n;
+      return height-size*3;
     }
     if (_y>size*3) {
       y=_y/(size)-3;
@@ -42,7 +42,7 @@ class Block {
         return tmp;
       }
     }
-    return height-48*n;
+    return height-size*3;
   }
 
   int isTop(int _x, int _y) {
@@ -200,7 +200,7 @@ class Block {
     //キャラ座標をマス目に変換する用
     int x=_x/size;
     int y;
-    if (_y>size*3 && _y<height-48*n) {
+    if (_y>size*3 && _y<height-size*3) {
       y=_y/size-3;
     } else if (_y<size*3) {
       y=6;
@@ -219,8 +219,8 @@ class Block {
     for (int i=0; i<brick.length; i++) {
       for (int j=0; j<6; j++) {
         if (brick[i][j]>0 && brickCount[i][j]<=0) {
-          int bufx=0,bufy=0;
-          if(brickCount[i][j]<0){
+          int bufx=0, bufy=0;
+          if (brickCount[i][j]<0) {
             bufx = int(random(0.5)*brickCount[i][j]/10);
             bufy = int(random(0.5)*brickCount[i][j]/10);
           }
