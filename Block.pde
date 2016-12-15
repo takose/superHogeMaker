@@ -65,25 +65,7 @@ class Block {
     }
   }
 
-  boolean isRight(int _x, int _y) {
-    int []chara=squares(_x, _y);
-    int x=chara[0];
-    int y=chara[1];
-    if (x>=brick.length || x<0) {
-      return false;
-    }
-    if (y==-1||y==6) {
-      return false;
-    } else {
-      if (brick[x][y]==0 || brickCount[x][y]>0) {
-        return false;
-      } else {
-        return true;
-      }
-    }
-  }
-
-  boolean isLeft(int _x, int _y) {
+  boolean isBlock(int _x, int _y) {
     int []chara=squares(_x, _y);
     int x=chara[0];
     int y=chara[1];
