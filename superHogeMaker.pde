@@ -272,7 +272,8 @@ void draw() {
      removeされたものより後ろのリストのアイテムが
      一瞬描画されなくなる。なのでfor文を分ける。
      */
-    for (Item i : items) {);
+    for (Item i : items) {
+      i.display();
     }
 
     //敵
