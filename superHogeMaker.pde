@@ -272,8 +272,7 @@ void draw() {
      removeされたものより後ろのリストのアイテムが
      一瞬描画されなくなる。なのでfor文を分ける。
      */
-    for (Item i : items) {
-      i.display();
+    for (Item i : items) {);
     }
 
     //敵
@@ -585,8 +584,18 @@ void draw() {
      一瞬描画されなくなる。なのでfor文を分ける。
      */
     for (Item i : items) {
+      //下のブロックが消えたら落下
       int itemFloor = block2.isFloor(i.posX+8*n, i.posY+8*n);
       i.move(itemFloor);
+
+      //ブロックとかぶったら上へ
+      if (block2.isBlock(i.posX+8*n, i.posY+8*n)) {
+        i.posY -= size;
+      }
+
+      if (block2.isBlock(i.posX*8*n, i.posY*8*n)) {
+        i.posY -= size;
+      }
 
       i.display();
     }
