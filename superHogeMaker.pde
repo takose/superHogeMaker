@@ -194,7 +194,7 @@ void draw() {
 
     //キャラ移動など
 
-    if (player.right && player.posX<width*m+size*2 && !block.isRight(player.posX+size, player.posY+14*n)) {
+    if (player.right && player.posX<width*m+size*2 && !block.isBlock(player.posX+size, player.posY+14*n)) {
       player.moveRight();
 
       //キャラが一定座標まで来たら敵を出現
@@ -217,7 +217,7 @@ void draw() {
       }
     }
 
-    if (player.left && player.posX>-backX && !block.isLeft(player.posX, player.posY+14*n)) {
+    if (player.left && player.posX>-backX && !block.isBlock(player.posX, player.posY+14*n)) {
       player.moveLeft();
     }
 
@@ -327,10 +327,10 @@ void draw() {
     for (Enemy e : enemy) {
       int eneFloor=block.isFloor(e.posX+12*n, e.posY);
       e.move(eneFloor);
-      if (e.isFacingRight && block.isRight(e.posX+size, e.posY+14*n)) {
+      if (e.isFacingRight && block.isBlock(e.posX+size, e.posY+14*n)) {
         e.isFacingRight = false;
       } else
-        if (!e.isFacingRight && block.isLeft(e.posX, e.posY+14*n)) {
+        if (!e.isFacingRight && block.isBlock(e.posX, e.posY+14*n)) {
           e.isFacingRight = true;
         }
       if (e.touch && e.alive) {
@@ -522,11 +522,11 @@ void draw() {
 
     //キャラ移動など
 
-    if (player.right && player.posX<width-size && !block2.isRight(player.posX+size, player.posY+14*n)) {
+    if (player.right && player.posX<width-size && !block2.isBlock(player.posX+size, player.posY+14*n)) {
       player.moveRight();
     }
 
-    if (player.left && player.posX>0 && !block2.isLeft(player.posX, player.posY+14*n)) {
+    if (player.left && player.posX>0 && !block2.isBlock(player.posX, player.posY+14*n)) {
       player.moveLeft();
     }
 
@@ -585,8 +585,18 @@ void draw() {
      一瞬描画されなくなる。なのでfor文を分ける。
      */
     for (Item i : items) {
+      //下のブロックが消えたら落下
       int itemFloor = block2.isFloor(i.posX+8*n, i.posY+8*n);
       i.move(itemFloor);
+
+      //ブロックとかぶったら上へ
+      if (block2.isBlock(i.posX+8*n, i.posY+8*n)) {
+        i.posY -= size;
+      }
+
+      if (block2.isBlock(i.posX*8*n, i.posY*8*n)) {
+        i.posY -= size;
+      }
 
       i.display();
     }
@@ -692,9 +702,9 @@ void draw() {
         eneFloor=block2.isFloor(e.posX+12*n, e.posY);
       }
       e.move(eneFloor);
-      if (block2.isRight(e.posX+size, e.posY+14*n)) {
+      if (block2.isBlock(e.posX+size, e.posY+14*n)) {
         e.isFacingRight = false;
-      } else if (block2.isLeft(e.posX, e.posY+14*n)) {
+      } else if (block2.isBlock(e.posX, e.posY+14*n)) {
         e.isFacingRight = true;
       }
       if (e.touch && e.alive) {
