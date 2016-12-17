@@ -37,7 +37,7 @@ class Block {
       y=-1;
     }
     for (int i=y; i<5; i++) {
-      if (brick[x][i+1]>=1 && brickCount[x][i+1]==0) {
+      if (brick[x][i+1]>=1 && brickCount[x][i+1]<=0) {
         int tmp=(i+3)*size;
         return tmp;
       }
